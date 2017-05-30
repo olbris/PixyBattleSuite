@@ -8,10 +8,13 @@ service that keeps score and makes it available for display
 """
 
 # ------------------------- imports -------------------------
+# stdlib
 
+# flask
 from flask import Flask, request
 from flask_restplus import Resource, Api
 
+# local
 from shared import constants as sharedconst
 
 
@@ -31,17 +34,15 @@ class HelloWorld(Resource):
 #    for now, global variable:
 gamestate = sharedconst.GameState.UNKNOWN
 
-@api.route("/memo/<string:memoname>")
-class SimpleMemo(Resource):
-    def get(self, memoname):
-        return {memoname: memos[memoname]}
-
-    def put(self, memoname):
-        memos[memoname] = request.form["data"]
-        return {memoname: memos[memoname]}
+@api.route("/state/<string:statename>")
+class GameSetState(Resource):
+    def get(self, statename):
+        global gamestate
+        gamestate = sharedconst.GameState(statename)
+        return {"state": gamestate.value}
 
 @api.route("/state")
-class SimpleMemo(Resource):
+class GameState(Resource):
     def get(self):
         return {"state": gamestate.value}
 
