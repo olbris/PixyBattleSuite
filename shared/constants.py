@@ -19,3 +19,7 @@ class GameState(enum.Enum):
     RUNNING = "running"
     PAUSED = "paused"
     FINISHED = "finished"
+
+# this is default for flask
+apiurl = "http://127.0.0.1:5000"
+

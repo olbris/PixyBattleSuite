@@ -15,7 +15,7 @@ from flask import Flask, request
 from flask_restplus import Resource, Api
 
 # local
-from shared import constants as sharedconst
+from shared import constants as const
 
 
 # app creation; would you normally put this in a function?
@@ -32,13 +32,13 @@ class HelloWorld(Resource):
 
 # probably should make a class to hold state, but
 #    for now, global variable:
-gamestate = sharedconst.GameState.UNKNOWN
+gamestate = const.GameState.UNKNOWN
 
 @api.route("/state/<string:statename>")
 class GameSetState(Resource):
     def get(self, statename):
         global gamestate
-        gamestate = sharedconst.GameState(statename)
+        gamestate = const.GameState(statename)
         return {"state": gamestate.value}
 
 @api.route("/state")
