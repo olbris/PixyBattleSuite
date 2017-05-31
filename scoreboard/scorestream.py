@@ -41,7 +41,6 @@ def main():
         r = requests.get("{}/hello".format(const.apiurl))
     except requests.exceptions.ConnectionError:
         logging.error("cannot connect to {}; quitting".format(const.apiurl))
-        # print("cannot connect to {}; quitting".format(const.apiurl))
         sys.exit()
 
     while True:
@@ -53,7 +52,6 @@ def main():
         else:
             message = "game state: {}".format(r.json())
         logging.info("{}: {}".format(time.asctime(), message))
-        # print("{}: {}".format(time.asctime(), message))
 
         time.sleep(args.interval)
 
