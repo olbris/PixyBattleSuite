@@ -10,6 +10,7 @@ simple script to poll a REST interface and report results, for testing
 # ------------------------- imports -------------------------
 # std lib
 import argparse
+import logging
 import sys
 import time
 
@@ -30,12 +31,17 @@ def main():
         type=int, default=3)
     args = parser.parse_args()
 
-    # should test connection here, maybe using "hello" endpoint
-    # if it's down, get a requests.exceptions.ConnectionError
+    # configure logging
+    logging.basicConfig(level=logging.INFO,
+        format='%(asctime)s %(levelname)s: %(message)s',
+        )
+
+    # test connection here, using "hello" endpoint
     try:
         r = requests.get("{}/hello".format(const.apiurl))
     except requests.exceptions.ConnectionError:
-        print("cannot connect to {}; quitting".format(const.apiurl))
+        logging.error("cannot connect to {}; quitting".format(const.apiurl))
+        # print("cannot connect to {}; quitting".format(const.apiurl))
         sys.exit()
 
     while True:
@@ -46,7 +52,8 @@ def main():
             message = "error: status code {}".format(r.status_code)
         else:
             message = "game state: {}".format(r.json())
-        print("{}: {}".format(time.asctime(), message))
+        logging.info("{}: {}".format(time.asctime(), message))
+        # print("{}: {}".format(time.asctime(), message))
 
         time.sleep(args.interval)
 
