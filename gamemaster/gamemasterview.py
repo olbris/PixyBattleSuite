@@ -12,6 +12,7 @@ import tkinter
 
 
 # local
+from shared import constants as const
 from gamemaster.gamechangelistener import GameChangeListener
 
 
@@ -23,7 +24,43 @@ class GamemasterView(GameChangeListener, tkinter.Tk):
         self.gamecontroller = gamecontroller
 
         # set up UI
-        self.label = tkinter.Label(self, text="Hello World", padx=5, pady=5) 
-        self.label.pack()
+        tkinter.Label(self, text="\n\n\n\t\t\tplaceholder\t\t\t\n\n\n").pack()
+
+        # test game state controls: output label and input buttons
+        # should really have a frame here
+        self.statelabel = tkinter.Label(self)
+        self.statelabel.pack()
+
+        tkinter.Button(self, text="Idle", command=self.setstateidle).pack()
+        tkinter.Button(self, text="Running", command=self.setstaterunning).pack()
+
+
+        # populate initial data here (eg, fill in game state label)
+        self.updatestatelabel(const.GameState.UNKNOWN)
+
+    # ----- update routines
+    def updatestatelabel(self, state):
+        self.statelabel.config(text="State: {}".format(state.value))
+
+    # ----- called by UI
+    def setstateidle(self):
+        self.gamecontroller.setstate(const.GameState.IDLE)
+
+    def setstaterunning(self):
+        self.gamecontroller.setstate(const.GameState.RUNNING)
+
+    # ----- GameChangeListener methods
+    def gamestatechanged(self, state):
+        self.updatestatelabel(state)
+
+
+
+
+
+
+
+
+
+
 
 

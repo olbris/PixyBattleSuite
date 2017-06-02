@@ -15,4 +15,7 @@ events from the game controller
 
 # ------------------------- GameChangeListener -------------------------
 class GameChangeListener:
-    pass
+
+    # all of these methods are optional to implement
+    def gamestatechanged(self, state):
+        pass
