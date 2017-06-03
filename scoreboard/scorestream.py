@@ -40,7 +40,7 @@ def main():
     try:
         r = requests.get("{}/hello".format(const.apiurl))
     except requests.exceptions.ConnectionError:
-        logging.error("cannot connect to {}; quitting".format(const.apiurl))
+        logging.exception("cannot connect to {}; quitting".format(const.apiurl))
         sys.exit()
 
     while True:
