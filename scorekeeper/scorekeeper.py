@@ -34,17 +34,20 @@ class HelloWorld(Resource):
 #    for now, global variable:
 gamestate = const.GameState.UNKNOWN
 
-@api.route("/state/<string:statename>")
-class GameSetState(Resource):
-    def get(self, statename):
-        global gamestate
-        gamestate = const.GameState(statename)
-        return {"state": gamestate.value}
-
 @api.route("/state")
 class GameState(Resource):
     def get(self):
         return {"state": gamestate.value}
+
+    def post(self):
+        """
+        expects: {"state": "idle" (etc)}
+        """
+        data = request.get_json()
+        global gamestate
+        gamestate = const.GameState(data["state"])
+        return {"state": gamestate.value}
+
 
 def main():
     app.run(debug=True)
