@@ -13,7 +13,7 @@ import logging
 from shared import constants as const
 from scoreboard.scoreboardcontroller import ScoreboardController
 from scoreboard.scoreboardinputview import ScoreboardInputView
-from scoreboard.scoreboardview import ScoreboardView
+from scoreboard.scoreboardview import ScoreboardView, ViewType
 
 
 
@@ -40,8 +40,8 @@ def main():
 
 
     # start views; hook to main controller (add listeners)
-    sv1 = ScoreboardView(siv, "public")
-    sv2 = ScoreboardView(siv, "private")
+    sv1 = ScoreboardView(siv, ViewType.PUBLIC)
+    sv2 = ScoreboardView(siv, ViewType.PRIVATE)
 
     sc.addchangelistener(sv1)
     sc.addchangelistener(sv2)
