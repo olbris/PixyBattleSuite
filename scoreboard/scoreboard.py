@@ -35,8 +35,9 @@ def main():
 
 
     # start main input controls, which is the Tk
-    #   root window
+    #   root window; give it to the controller
     siv = ScoreboardInputView(sc)
+    sc.addroot(siv)
 
 
     # start views; hook to main controller (add listeners)
@@ -50,6 +51,7 @@ def main():
 
     # run event loop
     logging.info("starting event loop")
+    sc.startpollingdata()
     siv.mainloop()
 
 

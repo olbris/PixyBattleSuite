@@ -24,7 +24,7 @@ class GamemasterView(GameChangeListener, tk.Tk):
         self.gamecontroller = gamecontroller
 
         # set up UI
-        tk.Label(self, text="\n\n\n\t\t\tplaceholder\t\t\t\n\n\n").pack()
+        tk.Label(self, text="\n\n\n\t\t\gamemaster view\t\t\t\n\n\n").pack()
 
         # test game state controls: output label and input buttons
         # should really have a frame here

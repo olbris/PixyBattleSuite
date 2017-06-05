@@ -25,6 +25,7 @@ logformat = "%(asctime)s %(levelname)s: %(message)s"
 
 
 
+
 # ----- game related
 
 
@@ -36,3 +37,6 @@ class GameState(enum.Enum):
     PAUSED = "paused"
     FINISHED = "finished"
 
+class TeamColors(enum.Enum):
+    RED = "red"
+    BLUE = "blue"

@@ -48,6 +48,14 @@ class GameState(Resource):
         gamestate = const.GameState(data["state"])
         return {"state": gamestate.value}
 
+@api.route("/gamedata")
+class GameData(Resource):
+    def get(self):
+        # eventually this'll get filled out with a lot more
+        #   fields:
+        return {"state": gamestate.value}
+    # no post or put; you update each field using its
+    #   individual call
 
 def main():
     app.run(debug=True)
@@ -55,3 +63,7 @@ def main():
 # ------------------------- script starts here -------------------------
 if __name__ == '__main__':
     main()
+
+
+
+

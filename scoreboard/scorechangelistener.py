@@ -16,6 +16,15 @@ interface for anything that responds to score changes
 class ScoreChangeListener:
 
     # all of these methods are optional to implement
+
+    # metadata
     def messagechanged(self, message):
         pass
 
+
+    # score
+
+
+    # game state and timer
+    def gamestatechanged(self, state):
+        pass

@@ -42,13 +42,22 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         if self.viewtype is ViewType.PRIVATE:
             tk.Label(self, text="\n\n\t\tthis is a private view!\t\t\n\n").pack()
 
+
         # test message display
         self.messagelabel = tk.Label(self, text="(no message)")
         self.messagelabel.pack()
+
+        # test game state
+        self.gamestatelabel = tk.Label(self, text="")
+        if self.viewtype is ViewType.PRIVATE:
+            self.gamestatelabel.pack()
 
 
     # ----- ScoreChangeListener stuff
     def messagechanged(self, message):
         self.messagelabel.config(text=message)
+
+    def gamestatechanged(self, state):
+        self.gamestatelabel.config(text=state.value)
 
 
