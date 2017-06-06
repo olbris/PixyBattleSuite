@@ -26,10 +26,6 @@ class ScoreboardController:
 
     def __init__(self):
         
-        # config
-        # how often to hit the service, in ms
-        self.pollinterval = 3000
-
         # state
         self.message = ""
 
@@ -68,11 +64,11 @@ class ScoreboardController:
 
         # reschedule this call; if you like, put in a 
         #   test here so we can turn it off
-        self.root.after(self.pollinterval, self.getgamedata)
+        self.root.after(const.scorepollinterval, self.getgamedata)
 
 
     def startpollingdata(self):
-        self.root.after(self.pollinterval, self.getgamedata)
+        self.root.after(const.scorepollinterval, self.getgamedata)
 
     # ----- control stuff
     def setmessage(self, message):

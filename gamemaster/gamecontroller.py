@@ -36,7 +36,8 @@ class GameController:
     def addchangelistener(self, listener):
         self.gamechangelisteners.append(listener)
 
-
+    def connectarenacontroller(self, addarenacontroller):
+        self.addarenacontroller = addarenacontroller
 
 
     # ----- control stuff

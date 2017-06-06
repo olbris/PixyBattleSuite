@@ -21,6 +21,7 @@ import logging
 
 # local
 from shared import constants as const
+from gamemaster.arenacontroller import ArenaController
 from gamemaster.gamecontroller import GameController
 from gamemaster.gamemasterview import GamemasterView
 from gamemaster.scorerecorder import ScoreRecorder
@@ -41,6 +42,8 @@ def main():
     gc = GameController()
 
     # start hw controller; hook to main controller
+    ac = ArenaController(gc)
+    gc.connectarenacontroller(ac)
 
     # start score reporter; hook to main controller
     sr = ScoreRecorder()
@@ -49,6 +52,7 @@ def main():
     # start view (ie, set up UI); hook to main controller
     gmv = GamemasterView(gc)
     gc.addchangelistener(gmv)
+    ac.addroot(gmv)
 
 
     # run event loop
