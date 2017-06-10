@@ -70,12 +70,14 @@ class ArenaController:
             try:
                 target = SerialTarget(devicepath)
                 self.targets[devicepath] = target
+                if devicepath in targetnames:
+                    self.targets[devicepath].name = targetnames[devicepath]
             except (OSError, serial.SerialException):
                 pass
 
         # send notification
         # return list of (devicepath, nice name)
-        found = [(t.devicepath, t.name) for t in self.targets.values()]
+        found = [(t.name, t.devicepath) for t in self.targets.values()]
 
         logging.info("discovered {} targets".format(len(found)))
 
@@ -113,16 +115,6 @@ class ArenaController:
 
 
 
-    # ----- game commands
-    def start(self):
-
-        # self.pendingcommand = "start"
-        pass
-
-    def stop(self):
-
-        # self.pendingcommand = "stop"
-        pass
 
 
 

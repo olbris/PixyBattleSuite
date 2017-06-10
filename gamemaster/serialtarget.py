@@ -24,6 +24,8 @@ RX:
 
 # ------------------------- imports -------------------------
 # std lib
+import logging
+import os
 
 # third party
 import serial
@@ -48,9 +50,10 @@ class SerialTarget:
         self.device = None
 
         if name is None:
-            self.name = self.devicepath
+            self.name = os.path.basename(self.devicepath)
         else:
             self.name = name
+        self.open()
 
     def open(self):
         # magic numbers taken from Cameron's code
@@ -62,7 +65,11 @@ class SerialTarget:
         self.device.open()
 
     def close(self):
-        self.device.close()
+        # apparently this can be None sometimes?
+        if self.device is not None:
+            self.device.close()
+        else:
+            logging.info("device {} unexpectedly None".format(self.devicepath))
 
     def version(self):
         self.device.write(b'VERSION\r\n')

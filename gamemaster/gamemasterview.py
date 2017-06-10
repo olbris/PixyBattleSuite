@@ -18,6 +18,14 @@ from gamemaster.gamechangelistener import GameChangeListener
 from gamemaster.hardwarechangelistener import HardwareChangeListener
 
 
+# ------------------------- constants -------------------------
+
+# I'm hardcoding the number of targets for now, to simplify
+#   the layout (so I don't have to make it dynamic); I believe
+#   there are only ten targets built
+maxtargets = 10
+
+
 # ------------------------- GamemasterView -------------------------
 class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
     def __init__(self, gamecontroller):
@@ -26,6 +34,11 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.gamecontroller = gamecontroller
 
         self.targetlist = []
+
+        # target grid UI components
+        self.targetcheckvars = {}
+        self.targetnamelabels = {}
+        self.targetpathlabels = {}
 
         # set up UI
         self.title("Gamemaster")
@@ -38,21 +51,35 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.mainframe = tk.Frame(self)
         self.mainframe.pack(side=tk.TOP, fill=tk.BOTH)
 
-        # hardware controls
+        # ----- hardware controls
         self.leftframe = tk.Frame(self.mainframe)
         self.leftframe.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        tk.Label(self.leftframe, text="\n\n\n\t\thardware controls\t\t\t\n\n\n").pack()
+        tk.Label(self.leftframe, text="Hardware controls").pack(side=tk.TOP)
 
-        tk.Button(self.leftframe, 
-            text="Discover", command=self.ondiscover).pack(side=tk.TOP)
+        self.hwbuttonframe = tk.Frame(self.leftframe)
+        self.hwbuttonframe.pack(side=tk.TOP)
+
+        tk.Label(self.hwbuttonframe, text="Select:").pack(side=tk.LEFT)
+        tk.Button(self.hwbuttonframe, text="All", command=self.selectalltargets).pack(side=tk.LEFT)
+        tk.Button(self.hwbuttonframe, text="None", command=self.selectnonetargets).pack(side=tk.LEFT)
+        tk.Button(self.hwbuttonframe, text="Discover", command=self.ondiscover).pack(side=tk.TOP)
+
+        self.targetgrid = tk.Frame(self.leftframe)
+        self.targetgrid.pack(side=tk.TOP)
+
+        for row in range(maxtargets):
+            self.targetcheckvars[row] = tk.IntVar()
+            tk.Checkbutton(self.targetgrid, variable=self.targetcheckvars[row]).grid(row=row, column=0)
+
+            self.targetnamelabels[row] = tk.Label(self.targetgrid, text="")
+            self.targetnamelabels[row].grid(row=row, column=1)
+
+            self.targetpathlabels[row] = tk.Label(self.targetgrid, text="")
+            self.targetpathlabels[row].grid(row=row, column=2)
 
 
-        self.targetcountlabel = tk.Label(self.leftframe,
-            text="# targets = (unknown)")
-        self.targetcountlabel.pack(side=tk.TOP)
-
-        # game controls
+        # ----- game controls
         self.rightframe = tk.Frame(self.mainframe)
         self.rightframe.pack(side=tk.RIGHT, fill=tk.BOTH)
 
@@ -96,6 +123,13 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         # we're done
         self.destroy()
 
+    def selectalltargets(self):
+        for row in range(maxtargets):
+            self.targetcheckvars[row].set(1)
+
+    def selectnonetargets(self):
+        for row in range(maxtargets):
+            self.targetcheckvars[row].set(0)
 
     def setstateidle(self):
         self.gamecontroller.setstate(const.GameState.IDLE)
@@ -112,8 +146,20 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
     # ----- HardwareChangeListener methods
     def targetsdiscovered(self, targetlist):
-        self.targetlist = targetlist
-        self.targetcountlabel.config(text="# targets = {}".format(len(self.targetlist)))
+        self.targetlist = sorted(targetlist, key=lambda item:item[0])
+
+        # clear existing names, paths
+        for row in range(maxtargets):
+            self.targetnamelabels[row].config(text="")
+            self.targetpathlabels[row].config(text="")
+
+        # put in new ones
+        for row, target in enumerate(self.targetlist):
+            self.targetnamelabels[row].config(text=target[0])
+            self.targetpathlabels[row].config(text=target[1])
+
+        # deselect all
+        self.selectnonetargets()
 
 
 
