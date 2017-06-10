@@ -32,6 +32,9 @@ import serial
 
 # local
 
+# ------------------------- constants -------------------------
+# remove this prefix from name
+portprefix = "tty."
 
 # ------------------------- SerialTarget -------------------------
 class SerialTarget:
@@ -51,6 +54,7 @@ class SerialTarget:
 
         if name is None:
             self.name = os.path.basename(self.devicepath)
+            self.name.replace(portprefix, "")
         else:
             self.name = name
         self.open()

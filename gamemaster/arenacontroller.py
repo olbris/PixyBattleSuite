@@ -28,6 +28,8 @@ devicesignature = "usbmodem"
 # use this to give targets nicer names; maps device name to
 #   nice name; I'm assuming the device name is unique and unchanging
 targetnames = {
+    "/dev/tty.usbmodem2936451": "target 6",
+    "/dev/tty.usbmodem2937361": "target 3",
     
 }
 
