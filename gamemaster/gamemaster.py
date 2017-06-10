@@ -52,6 +52,7 @@ def main():
     # start view (ie, set up UI); hook to main controller
     gmv = GamemasterView(gc)
     gc.addchangelistener(gmv)
+    gc.addhardwarechangelistener(gmv)
     ac.addroot(gmv)
 
 

@@ -27,6 +27,8 @@ class GameController:
         
         # internal stuff
         self.gamechangelisteners = []
+        self.hardwarechangelisteners = []
+        self.arenacontroller = None
 
         # game data
         self.state = const.GameState.IDLE
@@ -36,11 +38,14 @@ class GameController:
     def addchangelistener(self, listener):
         self.gamechangelisteners.append(listener)
 
-    def connectarenacontroller(self, addarenacontroller):
-        self.addarenacontroller = addarenacontroller
+    def addhardwarechangelistener(self, listener):
+        self.hardwarechangelisteners.append(listener)
+
+    def connectarenacontroller(self, arenacontroller):
+        self.arenacontroller = arenacontroller
 
 
-    # ----- control stuff
+    # ----- UI and game control stuff
     # called by (eg) view either as a results of user input,
     #   or to get state independent of changes
     def setstate(self, state):
@@ -55,6 +60,16 @@ class GameController:
             # notify listeners
             self.statechanged()
 
+    # ----- hardware controls stuff
+    def discovertargets(self):
+        self.arenacontroller.requestdiscover()
+
+    # def close all targets
+
+    # ----- called by arena controller
+    def targetsdiscovered(self, targetlist):
+        for listener in self.hardwarechangelisteners:
+            listener.targetsdiscovered(targetlist)
 
     # ----- notification routines
     def statechanged(self):
