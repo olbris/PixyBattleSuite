@@ -31,6 +31,7 @@ import os
 import serial
 
 # local
+from shared import constants as const
 
 # ------------------------- constants -------------------------
 # remove this prefix from name
@@ -80,6 +81,16 @@ class SerialTarget:
         self.device.flush()
         return str(self.device.readline().rstrip(),"utf-8") 
 
+    def command(self, command):
+        """
+        perform simple command without output
+
+        input: command enum member
+        """
+        self.device.write(command.value)
+        self.device.flush()
+
+    # I suspect these are all obsolete in favor of command():
     def start(self):
         self.device.write(b'START\r\n')
         self.device.flush()

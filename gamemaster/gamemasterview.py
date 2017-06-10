@@ -78,6 +78,20 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             self.targetpathlabels[row] = tk.Label(self.targetgrid, text="")
             self.targetpathlabels[row].grid(row=row, column=2)
 
+        # two rows of command buttons
+        self.commandframe1 = tk.Frame(self.leftframe)
+        self.commandframe1.pack(side=tk.TOP)
+        tk.Button(self.commandframe1, text="RESET", command=self.ontargetreset).pack(side=tk.LEFT)
+        tk.Button(self.commandframe1, text="START", command=self.ontargetstart).pack(side=tk.LEFT)
+        tk.Button(self.commandframe1, text="STOP", command=self.ontargetstop).pack(side=tk.LEFT)
+
+        self.commandframe2 = tk.Frame(self.leftframe)
+        self.commandframe2.pack(side=tk.TOP)
+        tk.Button(self.commandframe2, text="TEST_RED", command=self.ontargettestred).pack(side=tk.LEFT)
+        tk.Button(self.commandframe2, text="TEST_BLUE", command=self.ontargettestblue).pack(side=tk.LEFT)
+        tk.Button(self.commandframe2, text="TEST_GREEN", command=self.ontargettestgreen).pack(side=tk.LEFT)
+        tk.Button(self.commandframe2, text="TEST_REDBLUE", command=self.ontargettestredblue).pack(side=tk.LEFT)
+
 
         # ----- game controls
         self.rightframe = tk.Frame(self.mainframe)
@@ -108,6 +122,16 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         # populate initial data here (eg, fill in game state label)
         self.updatestatelabel(const.GameState.UNKNOWN)
 
+    def getselectedtargets(self):
+        # returns list of device paths that are selected
+        result = []
+        for row in range(maxtargets):
+            devicepath = self.targetpathlabels[row].cget("text")
+            if devicepath:
+                if self.targetcheckvars[row].get():
+                    result.append(devicepath)
+        return result
+
     # ----- update routines
     def updatestatelabel(self, state):
         self.statelabel.config(text="State: {}".format(state.value))
@@ -118,10 +142,40 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
     def onquit(self):
 
-        # close serial ports
+        # close serial ports (I don't think it's necessary, but
+        #   try to be neat)
+        self.gamecontroller.closealltargets()
 
         # we're done
         self.destroy()
+
+    def ontargetreset(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.RESET)
+
+    def ontargetstart(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.START)
+
+    def ontargetstop(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.STOP)
+
+    def ontargettestred(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.TEST_RED)
+
+    def ontargettestblue(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.TEST_BLUE)
+
+    def ontargettestgreen(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.TEST_GREEN)
+
+    def ontargettestredblue(self):
+        self.gamecontroller.targetcommand(self.getselectedtargets(), 
+            const.Commands.TEST_RED_BLUE)
 
     def selectalltargets(self):
         for row in range(maxtargets):

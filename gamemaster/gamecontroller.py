@@ -64,7 +64,12 @@ class GameController:
     def discovertargets(self):
         self.arenacontroller.requestdiscover()
 
-    # def close all targets
+    def targetcommand(self, targetlist, command):
+        self.arenacontroller.requesttargetcommand(targetlist, command)
+
+
+    def closealltargets(self):
+        self.arenacontroller.closealltargets()
 
     # ----- called by arena controller
     def targetsdiscovered(self, targetlist):

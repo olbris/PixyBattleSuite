@@ -86,6 +86,21 @@ class ArenaController:
         # send it off...
         self.gamecontroller.targetsdiscovered(found)
 
+    def closealltargets(self):
+        # synchronous, called on quit (I don't think it's needed,
+        #   but let's try to be neat)
+        for target in self.targets.values():
+            target.close()
+
+    # ----- async commands
+    def requesttargetcommand(self, targetlist, command):
+        self.root.after(0, self.targetcommand, targetlist, command)
+
+    def targetcommand(self, targetlist, command):
+        for targetpath in targetlist:
+            logging.info("sending command {} to {}".format(command.name, targetpath))
+            self.targets[targetpath].command(command)
+
 
     # ----- communication loop stuff
     def starthardwareloop(self):
