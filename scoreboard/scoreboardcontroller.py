@@ -64,11 +64,11 @@ class ScoreboardController:
 
         # reschedule this call; if you like, put in a 
         #   test here so we can turn it off
-        self.root.after(const.scorepollinterval, self.getgamedata)
+        self.root.after(const.scoreservicepollinterval, self.getgamedata)
 
 
     def startpollingdata(self):
-        self.root.after(const.scorepollinterval, self.getgamedata)
+        self.root.after(const.scoreservicepollinterval, self.getgamedata)
 
     # ----- control stuff
     def setmessage(self, message):

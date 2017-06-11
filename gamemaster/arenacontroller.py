@@ -102,31 +102,71 @@ class ArenaController:
             self.targets[targetpath].command(command)
 
 
-    # ----- communication loop stuff
-    def starthardwareloop(self):
-        self.root.after(const.hwpollinterval, self.pollhardware)
+    # ----- hardware polling
+    def startscorepolling(self):
+        logging.info("starting score polling")
+        self.root.after(0, self.pollscore)
 
-    def pollhardware(self):
-        
-        # send commands, then clear pending command
-        if self.pendingcommand is not None:
-            # send
+    def pollscore(self):
+        # this is just a request to generate the score; 
+        #   the output is read from a different scheduled call
 
-            # clear
-            self.pendingcommand = None
-
-        # log
-
-        # read score
-
-        # log
-
-        # send score updates to gamecontroller
-        
+        self.targetcommand(self.targets.values(), const.Commands.SCORE)
         
         # check if you should stop (?)
 
-        self.root.after(const.hwpollinterval, self.pollhardware)
+        self.root.after(const.hwscorepollinterval, self.pollscore)
+
+    def startoutputpolling(self):
+        logging.info("starting output polling")
+        self.root.after(0, self.polloutput)
+
+    def polloutput(self):
+        # look for any output and parse whatever you get
+
+        for target in self.targets.values():
+            # line = str(self.device.readline().rstrip(),"utf-8")
+            line = target.read()
+            line2 = ""
+
+            # parse; I believe we can dispatch neatly on the first
+            #   character, unless I'm missing something:
+            if line:
+                signature = line[0]
+                if signature == 'N':
+                    # return to neutral: currently do nothing
+                    pass
+                elif signature == 'H':
+                    # hit: currently do nothing
+                    pass
+                elif signature == 'B' or signature == 'R':
+                    # first line of two line score; get second line
+                    #   and report it
+                    line2 = str(self.device.readline().rstrip(),"utf-8")
+                     # parse and report score
+                     # hmm, looks like we'll be reporting scores up 
+                     #  to the controller per target and do the summing
+                     #  up there
+
+
+                else:
+                    # who knows, ignore it
+                    pass
+
+            # testing: log everything
+            logging.info("{} output: {}".format(target.name, line))
+            if line2:
+                logging.info("{} output2: {}".format(target.name, line2))
+
+        # check if you should stop (?)
+
+        self.root.after(const.hwoutputpollinterval, self.polloutput)
+
+
+
+
+
+
 
 
 

@@ -76,11 +76,6 @@ class SerialTarget:
         else:
             logging.info("device {} unexpectedly None".format(self.devicepath))
 
-    def version(self):
-        self.device.write(b'VERSION\r\n')
-        self.device.flush()
-        return str(self.device.readline().rstrip(),"utf-8") 
-
     def command(self, command):
         """
         perform simple command without output
@@ -90,7 +85,11 @@ class SerialTarget:
         self.device.write(command.value)
         self.device.flush()
 
-    # I suspect these are all obsolete in favor of command():
+    def read(self):
+        return str(self.device.readline().rstrip(),"utf-8")
+
+
+    # ----- obsolete: I suspect these are all obsolete in favor of command()
     def start(self):
         self.device.write(b'START\r\n')
         self.device.flush()
@@ -119,15 +118,22 @@ class SerialTarget:
         self.device.write(b'TEST_RED_BLUE\r\n')
         self.device.flush()
 
-    # untested: I suspect this isn't parsing right
-    #   see format above
     def score(self):
+        # this is not sufficiant to flush out existing
+        #   output, for some reason; I'm still seeing the
+        #   "neutral" messages at the start of the game,
+        #   even with this call
+        # self.device.reset_output_buffer()
         self.device.write(b'SCORE\r\n')
         redscore = str(self.device.readline().rstrip(),"utf-8")
         bluescore = str(self.device.readline().rstrip(),"utf-8")
         return redscore, bluescore
 
-    # other transmit calls not done
+    def version(self):
+        self.device.write(b'VERSION\r\n')
+        self.device.flush()
+        return str(self.device.readline().rstrip(),"utf-8") 
+
 
 
 

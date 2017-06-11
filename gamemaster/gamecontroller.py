@@ -76,6 +76,11 @@ class GameController:
         for listener in self.hardwarechangelisteners:
             listener.targetsdiscovered(targetlist)
 
+        # is this the right place for this?
+        if len(targetlist) > 0:
+            self.arenacontroller.startscorepolling()
+            self.arenacontroller.startoutputpolling()
+
     # ----- notification routines
     def statechanged(self):
         for listener in self.gamechangelisteners:

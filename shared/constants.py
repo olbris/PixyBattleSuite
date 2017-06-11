@@ -10,6 +10,16 @@ shared constants
 import enum
 
 
+# ----- general data
+teamnames = {
+    1: "Team 1",
+    2: "Team 2",
+    3: "Team 3",
+    4: "Team 4",
+    5: "Team 5",
+    6: "Team 6",
+}
+
 # ----- general configuration
 # logging
 logformat = "%(asctime)s %(levelname)s: %(message)s"
@@ -19,7 +29,8 @@ logformat = "%(asctime)s %(levelname)s: %(message)s"
 # ----- game related
 class GameState(enum.Enum):
     UNKNOWN = "unknown"
-    IDLE = "idle"
+    TESTING = "testing"
+    IDLE = "idle"  # maybe should be "preparing" instead?
     READY = "ready"
     RUNNING = "running"
     PAUSED = "paused"
@@ -31,14 +42,18 @@ class TeamColors(enum.Enum):
 
 
 # ----- hardware
-# how often to poll the hardware, ms:
-hwpollinterval = 100
+# how often to request the score from hardware, ms:
+hwscorepollinterval = 5000
 
-# these are the simple commands with no output
+# how often to look for any output from the hardware, ms:
+hwoutputpollinterval = 250
+
+
 class Commands(enum.Enum):
     RESET = b'RESET\r\n'
     START = b'START\r\n'
     STOP = b'STOP\r\n'
+    SCORE = b'SCORE\r\n'
     TEST_RED = b'TEST_RED\r\n'
     TEST_BLUE = b'TEST_BLUE\r\n'
     TEST_GREEN = b'TEST_GREEN\r\n'
@@ -48,6 +63,8 @@ class Commands(enum.Enum):
 # REST service; this is default for flask
 apiurl = "http://127.0.0.1:5000"
 
-# ----- scoeboard
+# ----- scoreboard
 # how often scoreboard should poll the score service, ms: 
-scorepollinterval = 3000
+scoreservicepollinterval = 3000
+
+
