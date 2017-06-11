@@ -96,8 +96,8 @@ class ArenaController:
     def requesttargetcommand(self, targetlist, command):
         self.root.after(0, self.targetcommand, targetlist, command)
 
-    def targetcommand(self, targetlist, command):
-        for targetpath in targetlist:
+    def targetcommand(self, targetpathlist, command):
+        for targetpath in targetpathlist:
             logging.info("sending command {} to {}".format(command.name, targetpath))
             self.targets[targetpath].command(command)
 
@@ -111,7 +111,8 @@ class ArenaController:
         # this is just a request to generate the score; 
         #   the output is read from a different scheduled call
 
-        self.targetcommand(self.targets.values(), const.Commands.SCORE)
+        # send target paths here, not target objects:
+        self.targetcommand(self.targets.keys(), const.Commands.SCORE)
         
         # check if you should stop (?)
 
@@ -125,7 +126,6 @@ class ArenaController:
         # look for any output and parse whatever you get
 
         for target in self.targets.values():
-            # line = str(self.device.readline().rstrip(),"utf-8")
             line = target.read()
             line2 = ""
 
@@ -135,32 +135,54 @@ class ArenaController:
                 signature = line[0]
                 if signature == 'N':
                     # return to neutral: currently do nothing
+                    # expected format: NEUTRAL,LEFT|RIGHT
                     pass
                 elif signature == 'H':
                     # hit: currently do nothing
+                    # expected format: HIT,RED|BLUE,LEFT|RIGHT
                     pass
                 elif signature == 'B' or signature == 'R':
+                    # expected format: RED|BLUE:###,###,###
+                    # (two lines, one each color)
                     # first line of two line score; get second line
                     #   and report it
-                    line2 = str(self.device.readline().rstrip(),"utf-8")
-                     # parse and report score
-                     # hmm, looks like we'll be reporting scores up 
-                     #  to the controller per target and do the summing
-                     #  up there
+                    line2 = target.read()
+                    # parse and report score
+                    # hmm, looks like we'll be reporting scores up 
+                    #  to the controller per target and do the summing
+                    #  up there
 
+                    score1 = (target.devicepath,) + self.parsescore(line)
+                    self.gamecontroller.reportscore(score1)
+                    score2 = (target.devicepath,) + self.parsescore(line2)
+                    self.gamecontroller.reportscore(score2)
 
                 else:
                     # who knows, ignore it
                     pass
 
             # testing: log everything
-            logging.info("{} output: {}".format(target.name, line))
-            if line2:
-                logging.info("{} output2: {}".format(target.name, line2))
+            # logging.info("{} output: {}".format(target.name, line))
+            # if line2:
+            #     logging.info("{} output2: {}".format(target.name, line2))
 
         # check if you should stop (?)
 
         self.root.after(const.hwoutputpollinterval, self.polloutput)
+
+    def parsescore(self, scoreline):
+        """
+        parse score output from target
+
+        input: expected format: RED|BLUE:###,###,###
+        output: (Color.RED/BLUE, #neutral hits, #opposing hits, #final state)
+        """
+        color, scores = scoreline.split(':')
+        items = scores.split(',')
+        return const.TeamColors(color), int(items[0]), int(items[1]), int(items[2])
+
+
+
 
 
 

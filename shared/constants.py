@@ -37,8 +37,8 @@ class GameState(enum.Enum):
     FINISHED = "finished"
 
 class TeamColors(enum.Enum):
-    RED = "red"
-    BLUE = "blue"
+    RED = "RED"
+    BLUE = "BLUE"
 
 
 # ----- hardware
@@ -46,7 +46,7 @@ class TeamColors(enum.Enum):
 hwscorepollinterval = 5000
 
 # how often to look for any output from the hardware, ms:
-hwoutputpollinterval = 250
+hwoutputpollinterval = 2000
 
 
 class Commands(enum.Enum):
