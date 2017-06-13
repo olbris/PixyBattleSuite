@@ -100,13 +100,12 @@ class GameController:
         """
 
         # testing:
-        logging.info("score received: {}".format(score))
+        # logging.info("score received: {}".format(score))
 
         # store most recent score line for each target,  
         #   keyed on path and team color; then sum up and notify
         self.targetscores[score[:2]] = score[2:]
         now = time.time()
-        self.lastscorereported = now
 
         # not 100% sure this is a good idea...I don't want to delay 
         #   scores, but I don't want to flood the system, either

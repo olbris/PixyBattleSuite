@@ -73,7 +73,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             tk.Checkbutton(self.targetgrid, variable=self.targetcheckvars[row]).grid(row=row, column=0)
 
             self.targetnamelabels[row] = tk.Label(self.targetgrid, text="")
-            self.targetnamelabels[row].grid(row=row, column=1)
+            self.targetnamelabels[row].grid(row=row, column=1, padx=5)
 
             self.targetpathlabels[row] = tk.Label(self.targetgrid, text="")
             self.targetpathlabels[row].grid(row=row, column=2)
