@@ -180,7 +180,7 @@ class ArenaController:
         """
         color, scores = scoreline.split(':')
         items = scores.split(',')
-        return const.TeamColors(color), int(items[0]), int(items[1]), int(items[2])
+        return const.TeamColors[color], int(items[0]), int(items[1]), int(items[2])
 
 
 
