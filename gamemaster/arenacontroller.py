@@ -30,6 +30,7 @@ devicesignature = "usbmodem"
 targetnames = {
     "/dev/tty.usbmodem2936451": "target 6",
     "/dev/tty.usbmodem2937361": "target 3",
+    "/dev/tty.usbmodem2937201": "target 5",
     
 }
 
