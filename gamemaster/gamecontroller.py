@@ -41,6 +41,7 @@ class GameController:
         self.lastscorereported = time.time()
 
         # game metadata
+        self.gamemetadata = {}
 
         # game running data
         self.state = const.GameState.IDLE
@@ -72,6 +73,10 @@ class GameController:
 
             # notify listeners
             self.statechanged()
+
+    def setmetadata(self, metadata):
+        self.metadata = metadata
+        self.metadatachanged()
 
     # ----- hardware controls stuff
     def discovertargets(self):
@@ -133,4 +138,7 @@ class GameController:
         for listener in self.gamechangelisteners:
             listener.gamestatechanged(self.state)
 
+    def metadatachanged(self):
+        for listener in self.gamechangelisteners:
+            listener.gamemetadatachanged(self.metadata)
 

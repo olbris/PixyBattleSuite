@@ -52,6 +52,18 @@ class ScoreRecorder(GameChangeListener):
         if r.status_code != 200:
             logging.error("error {} when posting {}".format(r.status_code, url))
 
+    def scorekeeperput(self, callstring, data):
+        """
+        used for puts
+        """
+        url = "{}/{}".format(const.apiurl, callstring)
+        try:
+            r = requests.put(url, json=data)
+        except requests.exceptions.ConnectionError:
+            logging.exception("cannot connect to {}".format(url))
+        if r.status_code != 200:
+            logging.error("error {} when posting {}".format(r.status_code, url))
+
 
 
     # ----- GameChangeListener methods
@@ -59,6 +71,9 @@ class ScoreRecorder(GameChangeListener):
         self.scorekeeperpost("state", data={"state": state.value})
         logging.info("game state changed to {}".format(state.value))
 
+    def gamemetadatachanged(self, metadata):
+        self.scorekeeperput("gamemetadata", data=metadata)
+        logging.info("game metadata changed to {}".format(metadata))
 
 
 

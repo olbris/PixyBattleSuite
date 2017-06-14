@@ -19,3 +19,6 @@ class GameChangeListener:
     # all of these methods are optional to implement
     def gamestatechanged(self, state):
         pass
+
+    def gamemetadatachanged(self, metadat):
+        pass

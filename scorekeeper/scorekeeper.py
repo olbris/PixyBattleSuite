@@ -9,6 +9,7 @@ service that keeps score and makes it available for display
 
 # ------------------------- imports -------------------------
 # stdlib
+import time
 
 # flask
 from flask import Flask, request
@@ -18,6 +19,32 @@ from flask_restplus import Resource, Api
 from shared import constants as const
 
 
+# ------------------------- data store -------------------------
+# we're just holding the data in module level variables
+
+# game metadata (?)
+metadata = {
+    const.TeamColors.RED: 0,
+    const.TeamColors.BLUE: 0,    
+}
+
+# ------------------------- data store -------------------------
+# data is entirely transient; just store in-memory
+#   in module variables 
+
+# game metadata
+gamemetadata = {
+    "time": time.time(),
+    "red": 0,
+    "blue": 0,
+}
+
+
+
+gamestate = const.GameState.UNKNOWN
+
+
+# ------------------------- server -------------------------
 # app creation; would you normally put this in a function?
 app = Flask(__name__)
 api = Api(app)
@@ -29,10 +56,6 @@ class HelloWorld(Resource):
     def get(self):
         return {"hello": "world"}
 
-
-# probably should make a class to hold state, but
-#    for now, global variable:
-gamestate = const.GameState.UNKNOWN
 
 @api.route("/state")
 class GameState(Resource):
@@ -48,14 +71,17 @@ class GameState(Resource):
         gamestate = const.GameState(data["state"])
         return {"state": gamestate.value}
 
-@api.route("/gamedata")
+@api.route("/gamemetadata")
 class GameData(Resource):
     def get(self):
-        # eventually this'll get filled out with a lot more
-        #   fields:
-        return {"state": gamestate.value}
-    # no post or put; you update each field using its
-    #   individual call
+        return gamemetadata
+
+    def put(self):
+        gamemetadata.update(request.get_json())
+        gamemetadata["time"] = time.time()
+
+        return gamemetadata
+
 
 def main():
     app.run(debug=True)

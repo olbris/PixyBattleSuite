@@ -12,6 +12,7 @@ import enum
 
 # ----- general data
 teamnames = {
+    0: "(team not set)",
     1: "Team 1",
     2: "Team 2",
     3: "Team 3",
@@ -19,6 +20,8 @@ teamnames = {
     5: "Team 5",
     6: "Team 6",
 }
+def getteamnumberlist():
+    return sorted(key for key in teamnames.keys() if key != 0)
 
 # ----- general configuration
 # logging
@@ -28,25 +31,26 @@ logformat = "%(asctime)s %(levelname)s: %(message)s"
 
 # ----- game related
 class GameState(enum.Enum):
-    UNKNOWN = "unknown"
+    UNKNOWN = "unknown"         # startup state
     TESTING = "testing"
-    IDLE = "idle"  # maybe should be "preparing" instead?
-    READY = "ready"
+    IDLE = "idle"               # after finished, before preparing
+    PREPARING = "preparing"     # getting ready to start
+    READY = "ready"             # ready to start (start imminent)
     RUNNING = "running"
     PAUSED = "paused"
-    FINISHED = "finished"
+    FINISHED = "finished"       # over, final score showing
 
 class TeamColors(enum.Enum):
-    RED = "RED"
-    BLUE = "BLUE"
+    RED = "red"
+    BLUE = "blue"
 
 
 # ----- hardware
 # how often to request the score from hardware, ms:
-hwscorepollinterval = 5000
+hwscorepollinterval = 500
 
 # how often to look for any output from the hardware, ms:
-hwoutputpollinterval = 2000
+hwoutputpollinterval = 200
 
 
 class Commands(enum.Enum):

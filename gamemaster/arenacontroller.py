@@ -99,7 +99,7 @@ class ArenaController:
 
     def targetcommand(self, targetpathlist, command):
         for targetpath in targetpathlist:
-            logging.info("sending command {} to {}".format(command.name, targetpath))
+            # logging.info("sending command {} to {}".format(command.name, targetpath))
             self.targets[targetpath].command(command)
 
 

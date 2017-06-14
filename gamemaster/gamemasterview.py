@@ -10,6 +10,7 @@ UI for the game master
 # std lib
 import logging
 import tkinter as tk
+from tkinter import messagebox
 
 
 # local
@@ -98,9 +99,34 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.rightframe.pack(side=tk.RIGHT, fill=tk.BOTH)
 
         tk.Label(self.rightframe, text="\n\n\n\t\tgame controls\t\t\t\n\n\n").pack()
+        tk.Label(self.rightframe, text="Game controls").pack(side=tk.TOP)
+
+        # team input:
+        self.metadataframe = tk.Frame(self.rightframe)
+        self.metadataframe.pack(side=tk.TOP)
+
+        teamnumberlist = const.getteamnumberlist()
+
+        tk.Label(self.metadataframe, text="RED team: ").pack(side=tk.LEFT)
+        self.redteamvar = tk.IntVar()
+        self.redteamvar.set(teamnumberlist[0])
+        self.redteammenu = tk.OptionMenu(self.metadataframe, self.redteamvar,
+            *teamnumberlist)
+        self.redteammenu.pack(side=tk.LEFT)
+
+        tk.Label(self.metadataframe, text="BLUE team: ").pack(side=tk.LEFT)
+        self.blueteamvar = tk.IntVar()
+        self.blueteamvar.set(teamnumberlist[0])
+        self.blueteammenu = tk.OptionMenu(self.metadataframe, self.blueteamvar,
+            *teamnumberlist)
+        self.blueteammenu.pack(side=tk.LEFT)
+
+        tk.Button(self.metadataframe, text="Set", command=self.onsetmetadata).pack(side=tk.LEFT)
 
 
-        # buttons at the bottom
+
+
+        # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
         self.buttonframe.pack(side=tk.BOTTOM, fill=tk.X)
 
@@ -137,9 +163,6 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.statelabel.config(text="State: {}".format(state.value))
 
     # ----- called by UI
-    def ondiscover(self):
-        self.gamecontroller.discovertargets()
-
     def onquit(self):
 
         # close serial ports (I don't think it's necessary, but
@@ -148,6 +171,10 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
         # we're done
         self.destroy()
+
+    # hardware controls
+    def ondiscover(self):
+        self.gamecontroller.discovertargets()
 
     def ontargetreset(self):
         self.gamecontroller.targetcommand(self.getselectedtargets(), 
@@ -185,6 +212,22 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         for row in range(maxtargets):
             self.targetcheckvars[row].set(0)
 
+
+    # game controls
+    def onsetmetadata(self):
+        redteamnumber = self.redteamvar.get()
+        blueteamnumber = self.blueteamvar.get()
+        if redteamnumber == blueteamnumber: 
+            messagebox.showerror("Bad team numbers", "Team numbers can't be the same!")
+            return
+
+        metadata = {
+            "red": redteamnumber,
+            "blue": blueteamnumber,
+        }
+        self.gamecontroller.setmetadata(metadata)
+
+    # testing
     def setstateidle(self):
         self.gamecontroller.setstate(const.GameState.IDLE)
 
