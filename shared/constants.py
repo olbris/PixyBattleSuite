@@ -38,11 +38,18 @@ class GameState(enum.Enum):
     READY = "ready"             # ready to start (start imminent)
     RUNNING = "running"
     PAUSED = "paused"
-    FINISHED = "finished"       # over, final score showing
+    FINISHED = "finished"       # over, time stopped
+    FINAL = "final"             # over, final score showing
 
 class TeamColors(enum.Enum):
     RED = "red"
     BLUE = "blue"
+
+class ScoreValues(enum.Enum):
+    NEUTRAL = 5     # target hit when in neutral color
+    OPPOSED = 10    # target hit when in opposing team color
+    ROBOT = 10      # opposing robot hit
+    FINAL = 25      # target in your color at game end
 
 
 # ----- hardware
@@ -69,6 +76,6 @@ apiurl = "http://127.0.0.1:5000"
 
 # ----- scoreboard
 # how often scoreboard should poll the score service, ms: 
-scoreservicepollinterval = 3000
+scoreservicepollinterval = 1000
 
 

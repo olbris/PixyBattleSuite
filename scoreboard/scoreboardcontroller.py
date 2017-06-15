@@ -31,6 +31,11 @@ class ScoreboardController:
 
         self.gamestate = const.GameState.UNKNOWN
 
+        self.gamemetadata = {
+            "red": 0,
+            "blue": 0,
+        }
+
 
         # bookkeeping
         self.scorechangelisteners = []
@@ -45,13 +50,13 @@ class ScoreboardController:
         self.root = root
 
     # ----- data retrieval
-    def getgamedata(self):
+    def getgamemetadata(self):
 
         # retrieve the game data from the service
 
         # for testing, use the json; will wrap in a class
 
-        url = "{}/{}".format(const.apiurl, "gamedata")
+        url = "{}/{}".format(const.apiurl, "gamemetadata")
         r = requests.get(url)
         if r.status_code != 200:
             message = "error: status code {}".format(r.status_code)
@@ -60,33 +65,33 @@ class ScoreboardController:
         logging.info("{}: {}".format(time.asctime(), message))
 
         # trigger the update
-        self.updategamedata(r.json())
+        self.updategamemetadata(r.json())
 
         # reschedule this call; if you like, put in a 
         #   test here so we can turn it off
-        self.root.after(const.scoreservicepollinterval, self.getgamedata)
+        self.root.after(const.scoreservicepollinterval, self.getgamemetadata)
 
 
     def startpollingdata(self):
-        self.root.after(const.scoreservicepollinterval, self.getgamedata)
+        self.root.after(const.scoreservicepollinterval, self.getgamemetadata)
 
     # ----- control stuff
     def setmessage(self, message):
         self.message = message
         self.messagechanged()
 
-    def updategamedata(self, data):
+    def updategamemetadata(self, data):
         """
-        update all the game data
+        update game metadata
         """
 
-        # for testing: data = json;
-        #   eventually, it'll be a nice class
-        # not sure I want to de-granularize it...should
-        #   really have separate updates?
-        self.gamestate = const.GameState(data["state"])
+        # testing; should update, should check time stamp before notifying
+        self.gamemetadata = data
+        self.gamemetadatachanged()
 
-        self.gamestatechanged()
+        # this is going to be changed
+        # self.gamestate = const.GameState(data["state"])
+        # self.gamestatechanged()
 
 
 
@@ -99,6 +104,9 @@ class ScoreboardController:
         for l in self.scorechangelisteners:
             l.gamestatechanged(self.gamestate)
 
+    def gamemetadatachanged(self):
+        for l in self.scorechangelisteners: 
+            l.gamemetadatachanged(self.gamemetadata)
 
 
 
