@@ -24,14 +24,15 @@ class ScoreboardInputView(tk.Tk):
         self.scoreboardcontroller = scoreboardcontroller
 
         # set up UI
-        tk.Label(self, text="\n\n\n\t\t\tscoreboardinputview\t\t\t\n\n\n").pack()
+        self.title("Scoreboard control")
+        self.geometry("300x300+100+500")
 
 
         # test message setter:
         tk.Label(self, text="Set messsage:").pack()
         self.messageentry = tk.Entry(self)
         self.messageentry.pack()
-        tk.Button(self, text="Submit", command=self.setmessage).pack()
+        tk.Button(self, text="Set", command=self.setmessage).pack()
 
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
@@ -44,8 +45,7 @@ class ScoreboardInputView(tk.Tk):
 
     def setmessage(self):
         message = self.messageentry.get()
-        if message:
-            self.scoreboardcontroller.setmessage(message)
+        self.scoreboardcontroller.setmessage(message)
 
     # ----- called by UI
     def onquit(self):
