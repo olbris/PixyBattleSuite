@@ -38,14 +38,14 @@ class GameController:
         #   and last time score sent out
         # times are in seconds since the epoch
         self.lastscorerecorded = time.time()
-        self.lastscorereported = time.time()
+        self.lasthitsreported = time.time()
 
         # game metadata
         self.gamemetadata = {}
 
         # game running data
         self.state = const.GameState.IDLE
-        self.targetscores = {}
+        self.targethits = {}
 
 
     # ----- various setup: listeners, etc.
@@ -99,37 +99,43 @@ class GameController:
             self.arenacontroller.startscorepolling()
             self.arenacontroller.startoutputpolling()
 
-    def reportscore(self, score):
+    def reporthits(self, hits):
         """
-        input: score tuple: (devicepath, TeamColors.RED, #neutral, #opposing, #final)
+        input: hits tuple: (devicepath, TeamColors.RED, #neutral, #opposing, #final)
         """
 
         # testing:
         # logging.info("score received: {}".format(score))
 
-        # store most recent score line for each target,  
+
+        # store hits, covert to score right before reporting
+
+
+
+        # store most recent hits line for each target,  
         #   keyed on path and team color; then sum up and notify
-        self.targetscores[score[:2]] = score[2:]
+        self.targethits[hits[:2]] = hits[2:]
         now = time.time()
 
         # not 100% sure this is a good idea...I don't want to delay 
         #   scores, but I don't want to flood the system, either
-        if now - self.lastscorereported > 0.25:
+        if now - self.lasthitsreported > 0.25:
             redtotal = (0, 0, 0)
             bluetotal = (0, 0, 0)
-            for devicepath, color in self.targetscores.keys():
+            for devicepath, color in self.targethits.keys():
                 if color is const.TeamColors.RED:
-                    redtotal = add3tuple(redtotal, self.targetscores[devicepath, color])
+                    redtotal = add3tuple(redtotal, self.targethits[devicepath, color])
                 elif color is const.TeamColors.BLUE:
-                    bluetotal = add3tuple(bluetotal, self.targetscores[devicepath, color])
+                    bluetotal = add3tuple(bluetotal, self.targethits[devicepath, color])
 
             # notify:
             # (still to come)
+            # need to mutliply out score from hits
 
             # test:
-            logging.info("score updated: red = {}, blue = {}".format(redtotal, bluetotal))
+            logging.info("hits updated: red = {}, blue = {}".format(redtotal, bluetotal))
 
-            self.lastscorereported = time.time()
+            self.lasthitsreported = time.time()
 
 
 

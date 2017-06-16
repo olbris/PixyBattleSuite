@@ -153,10 +153,10 @@ class ArenaController:
                     #  to the controller per target and do the summing
                     #  up there
 
-                    score1 = (target.devicepath,) + self.parsescore(line)
-                    self.gamecontroller.reportscore(score1)
-                    score2 = (target.devicepath,) + self.parsescore(line2)
-                    self.gamecontroller.reportscore(score2)
+                    hits1 = (target.devicepath,) + self.parsescore(line)
+                    self.gamecontroller.reporthits(hits1)
+                    hits2 = (target.devicepath,) + self.parsescore(line2)
+                    self.gamecontroller.reporthits(hits2)
 
                 else:
                     # who knows, ignore it
