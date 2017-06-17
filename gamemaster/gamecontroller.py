@@ -174,8 +174,8 @@ class GameController:
             )
 
         return {
-            "red": redscore,
-            "blue": bluescore,
+            "redscore": redscore,
+            "bluescore": bluescore,
         }
 
 

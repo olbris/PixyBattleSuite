@@ -38,13 +38,13 @@ def getdefaultdata():
     return {
     # metadata
     "metadatatime": time.time(),
-    "red": 0,
-    "blue": 0,
+    "redteam": 0,
+    "blueteam": 0,
 
     # score
     "scoretime": time.time(),
-    "red": (0, 0, 0, 0),
-    "blue": (0, 0, 0, 0),
+    "redscore": (0, 0, 0, 0),
+    "bluescore": (0, 0, 0, 0),
 
     # state
     "statetime": time.time(),

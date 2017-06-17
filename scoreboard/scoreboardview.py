@@ -184,13 +184,35 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.messagelabel.config(text=message)
 
     def gamemetadatachanged(self, data):
-        self.redteamlabel.config(text=const.teamnames[data["red"]])
-        self.blueteamlabel.config(text=const.teamnames[data["blue"]])
+        self.redteamlabel.config(text=const.teamnames[data["redteam"]])
+        self.blueteamlabel.config(text=const.teamnames[data["blueteam"]])
 
     def gamestatechanged(self, data):
         pass
 
     def gamescorechanged(self, data):
-        pass
+
+        redN, redO, redR, redF = data["redscore"]
+        blueN, blueO, blueR, blueF = data["bluescore"]
+
+        redtotal = redN + redO + redR + redF
+        bluetotal = blueN + blueO + blueR + blueF
+
+        # maybe don't show final hits in some game states?
+
+        self.redNscore.config(text=redN)
+        self.redOscore.config(text=redO)
+        self.redRscore.config(text=redR)
+        self.redFscore.config(text=redF)
+        self.redTscore.config(text=redtotal)
+
+        self.blueNscore.config(text=blueN)
+        self.blueOscore.config(text=blueO)
+        self.blueRscore.config(text=blueR)
+        self.blueFscore.config(text=blueF)
+        self.blueTscore.config(text=bluetotal)
+
+
+
 
 

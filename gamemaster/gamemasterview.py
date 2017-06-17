@@ -240,8 +240,8 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             return
 
         metadata = {
-            "red": redteamnumber,
-            "blue": blueteamnumber,
+            "redteam": redteamnumber,
+            "blueteam": blueteamnumber,
         }
         self.gamecontroller.setmetadata(metadata)
 
