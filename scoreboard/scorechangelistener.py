@@ -2,7 +2,8 @@
 
 ScoreChangeListener
 
-interface for anything that responds to score changes
+interface for anything that responds to score changes, 
+on the scoreboard side
 
 """
 

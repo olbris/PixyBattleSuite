@@ -45,7 +45,18 @@ class GameController:
 
         # game running data
         self.state = const.GameState.IDLE
-        self.targethits = {}
+
+        # holds hit data from targets, per device and team color
+        # does NOT store the robot hits, which are manually input
+        # also holds summed under device = "total", which we seed
+        self.targethits = {
+            ("total", const.TeamColors.RED): (0, 0, 0),
+            ("total", const.TeamColors.BLUE): (0, 0, 0),
+        }
+        self.robothits = {
+            const.TeamColors.RED: 0,
+            const.TeamColors.BLUE: 0,
+        }
 
 
     # ----- various setup: listeners, etc.
@@ -78,6 +89,10 @@ class GameController:
         self.metadata = metadata
         self.metadatachanged()
 
+    def setrobothits(self, redhits, bluehits):
+        self.robothits[const.TeamColors.RED] = redhits
+        self.robothits[const.TeamColors.BLUE] = bluehits
+
     # ----- hardware controls stuff
     def discovertargets(self):
         self.arenacontroller.requestdiscover()
@@ -107,11 +122,6 @@ class GameController:
         # testing:
         # logging.info("score received: {}".format(score))
 
-
-        # store hits, covert to score right before reporting
-
-
-
         # store most recent hits line for each target,  
         #   keyed on path and team color; then sum up and notify
         self.targethits[hits[:2]] = hits[2:]
@@ -120,6 +130,7 @@ class GameController:
         # not 100% sure this is a good idea...I don't want to delay 
         #   scores, but I don't want to flood the system, either
         if now - self.lasthitsreported > 0.25:
+            # these are neutral, opposing, final hits
             redtotal = (0, 0, 0)
             bluetotal = (0, 0, 0)
             for devicepath, color in self.targethits.keys():
@@ -128,15 +139,44 @@ class GameController:
                 elif color is const.TeamColors.BLUE:
                     bluetotal = add3tuple(bluetotal, self.targethits[devicepath, color])
 
+            # store the totals, too:
+            self.targethits["total", const.TeamColors.RED] = redtotal
+            self.targethits["total", const.TeamColors.BLUE] = bluetotal
+
             # notify:
-            # (still to come)
-            # need to mutliply out score from hits
+            self.scorechanged()
 
             # test:
             logging.info("hits updated: red = {}, blue = {}".format(redtotal, bluetotal))
 
             self.lasthitsreported = time.time()
 
+    def getscore(self):
+        
+        # generate score data from hit data; get robot hits from UI;
+        #   multiply out hits to scores
+
+        redhits = self.targethits["total", const.TeamColors.RED]
+        bluehits = self.targethits["total", const.TeamColors.BLUE]
+        
+        # robot hits = 0 for now (UI not connected)
+        redscore = (
+            redhits[0] * const.ScoreValues.NEUTRAL.value,
+            redhits[1] * const.ScoreValues.OPPOSED.value,
+            self.robothits[const.TeamColors.RED] * const.ScoreValues.ROBOT.value,
+            redhits[2] * const.ScoreValues.FINAL.value,
+            )
+        bluescore = (
+            bluehits[0] * const.ScoreValues.NEUTRAL.value,
+            bluehits[1] * const.ScoreValues.OPPOSED.value,
+            self.robothits[const.TeamColors.BLUE] * const.ScoreValues.ROBOT.value,
+            bluehits[2] * const.ScoreValues.FINAL.value,
+            )
+
+        return {
+            "red": redscore,
+            "blue": bluescore,
+        }
 
 
     # ----- notification routines
@@ -147,4 +187,8 @@ class GameController:
     def metadatachanged(self):
         for listener in self.gamechangelisteners:
             listener.gamemetadatachanged(self.metadata)
+
+    def scorechanged(self):
+        for listener in self.gamechangelisteners:
+            listener.gamescorechanged(self.getscore())
 

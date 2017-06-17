@@ -37,6 +37,7 @@ class ScoreRecorder(GameChangeListener):
             r = requests.get(url)
         except requests.exceptions.ConnectionError:
             logging.exception("cannot connect to {}".format(url))
+            return
         if r.status_code != 200:
             logging.error("error {} when getting {}".format(r.status_code, url))
 
@@ -49,6 +50,7 @@ class ScoreRecorder(GameChangeListener):
             r = requests.post(url, json=data)
         except requests.exceptions.ConnectionError:
             logging.exception("cannot connect to {}".format(url))
+            return
         if r.status_code != 200:
             logging.error("error {} when posting {}".format(r.status_code, url))
 
@@ -61,6 +63,7 @@ class ScoreRecorder(GameChangeListener):
             r = requests.put(url, json=data)
         except requests.exceptions.ConnectionError:
             logging.exception("cannot connect to {}".format(url))
+            return
         if r.status_code != 200:
             logging.error("error {} when posting {}".format(r.status_code, url))
 
@@ -74,6 +77,10 @@ class ScoreRecorder(GameChangeListener):
     def gamemetadatachanged(self, metadata):
         self.scorekeeperput("gamemetadata", data=metadata)
         logging.info("game metadata changed to {}".format(metadata))
+
+    def gamescorechanged(self, scoredata):
+        self.scorekeeperput("score", data=scoredata)
+        logging.info("game score changed to {}".format(scoredata))
 
 
 

@@ -39,6 +39,12 @@ gamemetadata = {
     "blue": 0,
 }
 
+# score
+score = {
+    "time": time.time(),
+    "red": (0, 0, 0, 0),
+    "blue": (0, 0, 0, 0),
+}
 
 
 gamestate = const.GameState.UNKNOWN
@@ -82,6 +88,16 @@ class GameData(Resource):
 
         return gamemetadata
 
+@api.route("/score")
+class GameScore(Resource):
+    def get(self):
+        return score
+
+    def put(self):
+        score.update(request.get_json())
+        score["time"] = time.time()
+
+        return score
 
 def main():
     app.run(debug=True)

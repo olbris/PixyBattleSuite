@@ -98,7 +98,6 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.rightframe = tk.Frame(self.mainframe)
         self.rightframe.pack(side=tk.RIGHT, fill=tk.BOTH)
 
-        tk.Label(self.rightframe, text="\n\n\n\t\tgame controls\t\t\t\n\n\n").pack()
         tk.Label(self.rightframe, text="Game controls").pack(side=tk.TOP)
 
         # team input:
@@ -124,7 +123,26 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.metadataframe, text="Set", command=self.onsetmetadata).pack(side=tk.LEFT)
 
 
+        # robot hits
+        tk.Label(self.rightframe, text="Robot hits").pack(side=tk.TOP, pady=20)
 
+        self.robothitframe = tk.Frame(self.rightframe)
+        self.robothitframe.pack(side=tk.TOP)
+
+        tk.Label(self.robothitframe, text="RED: ").pack(side=tk.LEFT, padx=5)
+        self.redrobothitsvar = tk.IntVar()
+        self.redrobothitsvar.set(0)
+        tk.Spinbox(self.robothitframe, from_=0, to=1000,
+            textvariable=self.redrobothitsvar).pack(side=tk.LEFT)
+
+        tk.Label(self.robothitframe, text="BLUE: ").pack(side=tk.LEFT, padx=5)
+        self.bluerobothitsvar = tk.IntVar()
+        self.bluerobothitsvar.set(0)
+        tk.Spinbox(self.robothitframe, from_=0, to=1000,
+            textvariable=self.bluerobothitsvar).pack(side=tk.LEFT)
+
+        tk.Button(self.robothitframe, text="Set", 
+            command=self.onsetrobothits).pack(side=tk.LEFT, padx=5)
 
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
@@ -226,6 +244,11 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             "blue": blueteamnumber,
         }
         self.gamecontroller.setmetadata(metadata)
+
+    def onsetrobothits(self):
+        self.gamecontroller.setrobothits(self.redrobothitsvar.get(),
+            self.bluerobothitsvar.get())
+        self.gamecontroller.scorechanged()
 
     # testing
     def setstateidle(self):

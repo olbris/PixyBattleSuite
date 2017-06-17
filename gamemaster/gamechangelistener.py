@@ -22,3 +22,6 @@ class GameChangeListener:
 
     def gamemetadatachanged(self, metadat):
         pass
+
+    def gamescorechanged(self, scoredata):
+        pass
