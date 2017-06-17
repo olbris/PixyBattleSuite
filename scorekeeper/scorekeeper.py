@@ -20,34 +20,12 @@ from shared import constants as const
 
 
 # ------------------------- data store -------------------------
-# we're just holding the data in module level variables
+# data is entirely transient; just store in-memory in one big dictionary
 
-# game metadata (?)
-metadata = {
-    const.TeamColors.RED: 0,
-    const.TeamColors.BLUE: 0,    
-}
-
-# ------------------------- data store -------------------------
-# data is entirely transient; just store in-memory
-#   in module variables 
-
-# game metadata
-gamemetadata = {
-    "time": time.time(),
-    "red": 0,
-    "blue": 0,
-}
-
-# score
-score = {
-    "time": time.time(),
-    "red": (0, 0, 0, 0),
-    "blue": (0, 0, 0, 0),
-}
-
-
-gamestate = const.GameState.UNKNOWN
+gamedata = const.getdefaultdata()
+gamedata["metadatatime"] = time.time()
+gamedata["scoretime"] = time.time()
+gamedata["statetime"] = time.time()
 
 
 # ------------------------- server -------------------------
@@ -66,38 +44,38 @@ class HelloWorld(Resource):
 @api.route("/state")
 class GameState(Resource):
     def get(self):
-        return {"state": gamestate.value}
+        return gamedata
 
     def post(self):
-        """
-        expects: {"state": "idle" (etc)}
-        """
         data = request.get_json()
-        global gamestate
-        gamestate = const.GameState(data["state"])
-        return {"state": gamestate.value}
+        gamestate.update(request.get_json())
+        gamestate["statetime"] = time.time()
+        return gamedata
 
-@api.route("/gamemetadata")
-class GameData(Resource):
+@api.route("/metadata")
+class GameMetaData(Resource):
     def get(self):
-        return gamemetadata
+        return gamedata
 
     def put(self):
-        gamemetadata.update(request.get_json())
-        gamemetadata["time"] = time.time()
-
-        return gamemetadata
+        gamedata.update(request.get_json())
+        gamedata["metadatatime"] = time.time()
+        return gamedata
 
 @api.route("/score")
 class GameScore(Resource):
     def get(self):
-        return score
+        return gamedata
 
     def put(self):
-        score.update(request.get_json())
-        score["time"] = time.time()
+        gamedata.update(request.get_json())
+        gamedata["scoretime"] = time.time()
+        return gamedata
 
-        return score
+@api.route("/data")
+class GameData(Resource):
+    def get(self):
+        return gamedata
 
 def main():
     app.run(debug=True)

@@ -183,11 +183,14 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
     def messagechanged(self, message):
         self.messagelabel.config(text=message)
 
-    def gamemetadatachanged(self, metadata):
-        self.redteamlabel.config(text=const.teamnames[metadata["red"]])
-        self.blueteamlabel.config(text=const.teamnames[metadata["blue"]])
+    def gamemetadatachanged(self, data):
+        self.redteamlabel.config(text=const.teamnames[data["red"]])
+        self.blueteamlabel.config(text=const.teamnames[data["blue"]])
 
-    def gamestatechanged(self, state):
+    def gamestatechanged(self, data):
+        pass
+
+    def gamescorechanged(self, data):
         pass
 
 

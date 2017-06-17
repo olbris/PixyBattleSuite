@@ -8,6 +8,7 @@ shared constants
 # ------------------------- imports -------------------------
 # std lib
 import enum
+import time
 
 
 # ----- general data
@@ -30,6 +31,29 @@ logformat = "%(asctime)s %(levelname)s: %(message)s"
 
 
 # ----- game related
+# note: these enums are not turning out to be as convenient as
+#   I hoped; would be easier just to use string constants
+
+def getdefaultdata():
+    return {
+    # metadata
+    "metadatatime": time.time(),
+    "red": 0,
+    "blue": 0,
+
+    # score
+    "scoretime": time.time(),
+    "red": (0, 0, 0, 0),
+    "blue": (0, 0, 0, 0),
+
+    # state
+    "statetime": time.time(),
+    "state": GameState.UNKNOWN.value,
+
+}
+
+
+
 class GameState(enum.Enum):
     UNKNOWN = "unknown"         # startup state
     TESTING = "testing"

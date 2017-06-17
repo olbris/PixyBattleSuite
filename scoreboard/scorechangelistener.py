@@ -7,12 +7,6 @@ on the scoreboard side
 
 """
 
-# ------------------------- imports -------------------------
-
-
-
-
-
 # ------------------------- ScoreChangeListener -------------------------
 class ScoreChangeListener:
 
@@ -26,8 +20,9 @@ class ScoreChangeListener:
         pass
 
     # score
+    def gamescorechanged(self, score):
+        pass
 
-
-    # game state and timer
+    # game state
     def gamestatechanged(self, state):
         pass

@@ -26,16 +26,11 @@ class ScoreboardController:
 
     def __init__(self):
         
-        # state
+        # UI message
         self.message = ""
 
-        self.gamestate = const.GameState.UNKNOWN
-
-        self.gamemetadata = {
-            "red": 0,
-            "blue": 0,
-        }
-
+        # all the game data
+        self.gamedata = const.getdefaultdata()
 
         # bookkeeping
         self.scorechangelisteners = []
@@ -50,49 +45,47 @@ class ScoreboardController:
         self.root = root
 
     # ----- data retrieval
-    def getgamemetadata(self):
+    def getgamedata(self):
 
         # retrieve the game data from the service
-
-        # for testing, use the json; will wrap in a class
-
-        url = "{}/{}".format(const.apiurl, "gamemetadata")
+        url = "{}/{}".format(const.apiurl, "data")
         r = requests.get(url)
         if r.status_code != 200:
-            message = "error: status code {}".format(r.status_code)
-        else:
-            message = "game state: {}".format(r.json())
-        logging.info("{}: {}".format(time.asctime(), message))
+            logging.error("error: status code {}".format(r.status_code))
+            return
 
-        # trigger the update
-        self.updategamemetadata(r.json())
+        # check out which updates we need to do
+        newdata = r.json()
+
+        metadataupdated = newdata["metadatatime"] > self.gamedata["metadatatime"]
+        scoreupdated = newdata["scoretime"] > self.gamedata["scoretime"]
+        stateupdated = newdata["statetime"] > self.gamedata["statetime"]
+        if any([metadataupdated, scoreupdated, stateupdated]):
+            self.gamedata.update(newdata)
+
+            if metadataupdated:
+                self.gamemetadatachanged()
+
+            if scoreupdated:
+                self.gamescorechanged()
+
+            if stateupdated:
+                self.gamestatechanged()
+
+
 
         # reschedule this call; if you like, put in a 
         #   test here so we can turn it off
-        self.root.after(const.scoreservicepollinterval, self.getgamemetadata)
+        self.root.after(const.scoreservicepollinterval, self.getgamedata)
 
 
     def startpollingdata(self):
-        self.root.after(const.scoreservicepollinterval, self.getgamemetadata)
+        self.root.after(const.scoreservicepollinterval, self.getgamedata)
 
     # ----- control stuff
     def setmessage(self, message):
         self.message = message
         self.messagechanged()
-
-    def updategamemetadata(self, data):
-        """
-        update game metadata
-        """
-
-        # testing; should update, should check time stamp before notifying
-        self.gamemetadata = data
-        self.gamemetadatachanged()
-
-        # this is going to be changed
-        # self.gamestate = const.GameState(data["state"])
-        # self.gamestatechanged()
-
 
 
     # ----- notifications
@@ -102,11 +95,15 @@ class ScoreboardController:
 
     def gamestatechanged(self):
         for l in self.scorechangelisteners:
-            l.gamestatechanged(self.gamestate)
+            l.gamestatechanged(self.gamedata)
 
     def gamemetadatachanged(self):
         for l in self.scorechangelisteners: 
-            l.gamemetadatachanged(self.gamemetadata)
+            l.gamemetadatachanged(self.gamedata)
+
+    def gamescorechanged(self):
+        for l in self.scorechangelisteners: 
+            l.gamescorechanged(self.gamedata)
 
 
 

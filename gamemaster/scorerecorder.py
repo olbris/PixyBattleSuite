@@ -75,7 +75,7 @@ class ScoreRecorder(GameChangeListener):
         logging.info("game state changed to {}".format(state.value))
 
     def gamemetadatachanged(self, metadata):
-        self.scorekeeperput("gamemetadata", data=metadata)
+        self.scorekeeperput("metadata", data=metadata)
         logging.info("game metadata changed to {}".format(metadata))
 
     def gamescorechanged(self, scoredata):
