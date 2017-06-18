@@ -51,9 +51,21 @@ teamnamecolor = "white"
 textfont = ("Gill Sans", 60)
 scorefont = ("Gill Sans", 72)
 timerfont = ("Gill Sans", 96)
+barfont = ("Gill Sans", 18)
 
-
-
+# game state colors
+gamestatecolors = {
+    const.GameState.UNKNOWN: "red",
+    const.GameState.TESTING: "brown",
+    const.GameState.IDLE: "gray70",
+    const.GameState.PREPARING: "yellow",
+    const.GameState.READY: "orange",
+    const.GameState.RUNNING: "green",
+    const.GameState.PAUSED: "red",
+    const.GameState.FINISHED: "blue",
+    const.GameState.FINAL: "purple",
+}
+gamestatebartext = "                         "
 
 # ------------------------- ScoreboardView -------------------------
 class ScoreboardView(ScoreChangeListener, tk.Toplevel):
@@ -78,18 +90,30 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             fg=fgcolor, bg=bgcolor, font=("Gill Sans", 96)).pack(side=tk.TOP, pady=20)
 
 
-        # timer area
+        # timer area, plus game state color bars
+
+        self.statebar1 = tk.Label(self.mainframe, 
+            text=gamestatebartext, font=barfont,
+            bg=gamestatecolors[const.GameState.UNKNOWN])
+        self.statebar1.pack(side=tk.TOP)
+
         # placeholder
-        # maybe color bars above and below?
         tk.Label(self.mainframe, text="0:00",
-            fg=fgcolor, bg=bgcolor, font=scorefont).pack(side=tk.TOP, pady=20)
+            fg=fgcolor, bg=bgcolor, font=scorefont).pack(side=tk.TOP, pady=5)
+
+        self.statebar2 = tk.Label(self.mainframe, 
+            text=gamestatebartext, font=barfont,
+            bg=gamestatecolors[const.GameState.UNKNOWN])
+        self.statebar2.pack(side=tk.TOP)
+
+
 
         # team names: the trick is to keep this centered on the "vs"
         #   when the team names are dissimilar lengths
         # for now, don't worry about it
         self.teamnameframe = tk.Frame(self.mainframe, bg=bgcolor)
         # self.teamnameframe.pack(side=tk.TOP, expand=1, fill=tk.X)
-        self.teamnameframe.pack(side=tk.TOP)
+        self.teamnameframe.pack(side=tk.TOP, pady=25)
 
 
         self.redteamlabel = tk.Label(self.teamnameframe, text="",
@@ -188,7 +212,8 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.blueteamlabel.config(text=const.teamnames[data["blueteam"]])
 
     def gamestatechanged(self, data):
-        pass
+        self.statebar1.config(bg=gamestatecolors[const.GameState(data["state"])])
+        self.statebar2.config(bg=gamestatecolors[const.GameState(data["state"])])
 
     def gamescorechanged(self, data):
 

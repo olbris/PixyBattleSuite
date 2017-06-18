@@ -48,8 +48,8 @@ class GameState(Resource):
 
     def post(self):
         data = request.get_json()
-        gamestate.update(request.get_json())
-        gamestate["statetime"] = time.time()
+        gamedata.update(request.get_json())
+        gamedata["statetime"] = time.time()
         return gamedata
 
 @api.route("/metadata")

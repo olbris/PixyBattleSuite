@@ -101,6 +101,8 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Label(self.rightframe, text="Game controls").pack(side=tk.TOP)
 
         # team input:
+        tk.Label(self.rightframe, text="Team assignments").pack(side=tk.TOP, pady=20)
+
         self.metadataframe = tk.Frame(self.rightframe)
         self.metadataframe.pack(side=tk.TOP)
 
@@ -144,6 +146,30 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.robothitframe, text="Set", 
             command=self.onsetrobothits).pack(side=tk.LEFT, padx=5)
 
+
+        # frame with game logic and game state, vertically next to each other
+        tk.Label(self.rightframe, text="Game management").pack(side=tk.TOP, pady=20)
+
+        self.logicstateframe = tk.Frame(self.rightframe)
+        self.logicstateframe.pack(side=tk.TOP)
+
+        self.logicframe = tk.Frame(self.logicstateframe)
+        self.logicframe.pack(side=tk.LEFT)
+        tk.Label(self.logicframe, text="\n\tgame buttons here\t\n").pack()
+
+        self.stateframe = tk.Frame(self.logicstateframe)
+        self.stateframe.pack(side=tk.LEFT)
+        tk.Label(self.stateframe, text="Game state:").pack(side=tk.TOP)
+        self.statelabel = tk.Label(self.stateframe, text=const.GameState.UNKNOWN.name)
+        self.statelabel.pack(side=tk.TOP)
+
+        def makecallback(state):
+            return lambda: self.gamecontroller.setstate(state)
+        for state in const.GameState:
+            tk.Button(self.stateframe, text=state.name, width=15,
+                command=makecallback(state)).pack(side=tk.TOP)
+
+
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
         self.buttonframe.pack(side=tk.BOTTOM, fill=tk.X)
@@ -151,20 +177,6 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.buttonframe, 
             text="Quit", command=self.onquit).pack(side=tk.RIGHT)
 
-
-        # leftover test stuff; remove when totally unneeded
-
-        # test game state controls: output label and input buttons
-        # should really have a frame here
-        self.statelabel = tk.Label(self)
-        self.statelabel.pack()
-
-        tk.Button(self, text="Idle", command=self.setstateidle).pack()
-        tk.Button(self, text="Running", command=self.setstaterunning).pack()
-
-
-        # populate initial data here (eg, fill in game state label)
-        self.updatestatelabel(const.GameState.UNKNOWN)
 
     def getselectedtargets(self):
         # returns list of device paths that are selected
@@ -178,7 +190,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
     # ----- update routines
     def updatestatelabel(self, state):
-        self.statelabel.config(text="State: {}".format(state.value))
+        self.statelabel.config(text="State: {}".format(state.name))
 
     # ----- called by UI
     def onquit(self):
@@ -250,12 +262,6 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             self.bluerobothitsvar.get())
         self.gamecontroller.scorechanged()
 
-    # testing
-    def setstateidle(self):
-        self.gamecontroller.setstate(const.GameState.IDLE)
-
-    def setstaterunning(self):
-        self.gamecontroller.setstate(const.GameState.RUNNING)
 
     # ----- GameChangeListener methods
     def gamestatechanged(self, state):
