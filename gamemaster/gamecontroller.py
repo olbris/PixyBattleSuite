@@ -46,17 +46,7 @@ class GameController:
         # game running data
         self.state = const.GameState.IDLE
 
-        # holds hit data from targets, per device and team color
-        # does NOT store the robot hits, which are manually input
-        # also holds summed under device = "total", which we seed
-        self.targethits = {
-            ("total", const.TeamColors.RED): (0, 0, 0),
-            ("total", const.TeamColors.BLUE): (0, 0, 0),
-        }
-        self.robothits = {
-            const.TeamColors.RED: 0,
-            const.TeamColors.BLUE: 0,
-        }
+        self.resetstoredscores()
 
 
     # ----- various setup: listeners, etc.
@@ -93,6 +83,23 @@ class GameController:
         self.robothits[const.TeamColors.RED] = redhits
         self.robothits[const.TeamColors.BLUE] = bluehits
 
+    def resetscores(self):
+        self.resetstoredscores()
+        self.resetalltargets()
+
+    def resetstoredscores(self):
+        # holds hit data from targets, per device and team color
+        # also holds summed under device = "total", which we seed
+        self.targethits = {
+            ("total", const.TeamColors.RED): (0, 0, 0),
+            ("total", const.TeamColors.BLUE): (0, 0, 0),
+        }
+        self.robothits = {
+            const.TeamColors.RED: 0,
+            const.TeamColors.BLUE: 0,
+        }
+
+
     # ----- hardware controls stuff
     def discovertargets(self):
         self.arenacontroller.requestdiscover()
@@ -100,6 +107,8 @@ class GameController:
     def targetcommand(self, targetlist, command):
         self.arenacontroller.requesttargetcommand(targetlist, command)
 
+    def resetalltargets(self):
+        self.arenacontroller.resetalltargets()
 
     def closealltargets(self):
         self.arenacontroller.closealltargets()

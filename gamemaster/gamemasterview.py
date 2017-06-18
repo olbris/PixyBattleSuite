@@ -27,6 +27,10 @@ from gamemaster.hardwarechangelistener import HardwareChangeListener
 maxtargets = 10
 
 
+# minimal styling:
+sectionfont = ("Helvetica", 16, "bold")
+statefont = ("Helvetica", 24, "bold")
+
 # ------------------------- GamemasterView -------------------------
 class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
     def __init__(self, gamecontroller):
@@ -56,7 +60,8 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.leftframe = tk.Frame(self.mainframe)
         self.leftframe.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        tk.Label(self.leftframe, text="Hardware controls").pack(side=tk.TOP)
+        tk.Label(self.leftframe, text="Hardware controls", 
+            font=sectionfont).pack(side=tk.TOP, pady=20)
 
         self.hwbuttonframe = tk.Frame(self.leftframe)
         self.hwbuttonframe.pack(side=tk.TOP)
@@ -93,22 +98,49 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.commandframe2, text="TEST_GREEN", command=self.ontargettestgreen).pack(side=tk.LEFT)
         tk.Button(self.commandframe2, text="TEST_REDBLUE", command=self.ontargettestredblue).pack(side=tk.LEFT)
 
+        tk.Label(self.leftframe, text="Manual state change (testing)", 
+            font=sectionfont).pack(side=tk.TOP, pady=20)
 
-        # ----- game controls
+        def makecallback(state):
+            return lambda: self.gamecontroller.setstate(state)
+        for state in const.GameState:
+            tk.Button(self.leftframe, text=state.name, width=15,
+                command=makecallback(state)).pack(side=tk.TOP)
+
+
+
+
+        # ----- game controls, organized by how the game flows
         self.rightframe = tk.Frame(self.mainframe)
         self.rightframe.pack(side=tk.RIGHT, fill=tk.BOTH)
 
-        tk.Label(self.rightframe, text="Game controls").pack(side=tk.TOP)
+        tk.Label(self.rightframe, text="Game controls",
+            font=sectionfont).pack(side=tk.TOP, pady=20)
 
-        # team input:
-        tk.Label(self.rightframe, text="Team assignments").pack(side=tk.TOP, pady=20)
+        # SETUP
+        tk.Label(self.rightframe, text="Setup", 
+            font=sectionfont, anchor=tk.W).pack(side=tk.TOP, 
+            fill=tk.X, pady=10)
 
+        tk.Button(self.rightframe, text="Discover hardware",
+            command=self.ondiscover).pack(side=tk.TOP)
+
+        # PREPARING to start
+        tk.Label(self.rightframe, text="Preparing", 
+            font=sectionfont, anchor=tk.W).pack(side=tk.TOP, 
+            fill=tk.X, pady=10)
+
+        tk.Button(self.rightframe, text="Set PREPARING",
+            command=makecallback(const.GameState.PREPARING)).pack(side=tk.TOP)
+
+
+        # team assignments:
         self.metadataframe = tk.Frame(self.rightframe)
         self.metadataframe.pack(side=tk.TOP)
 
         teamnumberlist = const.getteamnumberlist()
 
-        tk.Label(self.metadataframe, text="RED team: ").pack(side=tk.LEFT)
+        tk.Label(self.metadataframe, text="Assign teams:   RED team: ").pack(side=tk.LEFT)
         self.redteamvar = tk.IntVar()
         self.redteamvar.set(teamnumberlist[0])
         self.redteammenu = tk.OptionMenu(self.metadataframe, self.redteamvar,
@@ -124,50 +156,70 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
         tk.Button(self.metadataframe, text="Set", command=self.onsetmetadata).pack(side=tk.LEFT)
 
+        # reset scores (target and robot hits)
+        tk.Button(self.rightframe, text="Reset scores",
+            command=self.resetscores).pack(side=tk.TOP)
+
+        tk.Label(self.rightframe, text="Referees clear robot hit clickers").pack(side=tk.TOP)
+
+        tk.Button(self.rightframe, text="Set READY",
+            command=makecallback(const.GameState.READY)).pack(side=tk.TOP)
+
+        # READY - RUNNING
+        tk.Label(self.rightframe, text="Ready; start", 
+            font=sectionfont, anchor=tk.W).pack(side=tk.TOP, 
+            fill=tk.X, pady=10)
+
+        # start game and timer 
+        # (incomplete!)
+        tk.Button(self.rightframe, text="START game", 
+            command=lambda: None).pack(side=tk.TOP)
+
+        tk.Label(self.rightframe, text="Placeholder timer:  0:00").pack(side=tk.TOP)
+
+        tk.Label(self.rightframe, 
+            text="Wait for time to elapse and transition to FINISHED").pack(side=tk.TOP)
+
+
+        # FINISHED-FINAL
+        tk.Label(self.rightframe, text="Finish; final score", 
+            font=sectionfont, anchor=tk.W).pack(side=tk.TOP, 
+            fill=tk.X, pady=10)
+
 
         # robot hits
-        tk.Label(self.rightframe, text="Robot hits").pack(side=tk.TOP, pady=20)
-
         self.robothitframe = tk.Frame(self.rightframe)
         self.robothitframe.pack(side=tk.TOP)
 
-        tk.Label(self.robothitframe, text="RED: ").pack(side=tk.LEFT, padx=5)
+        tk.Label(self.robothitframe, text="Enter robot hits:  RED: ").pack(side=tk.LEFT, padx=5)
         self.redrobothitsvar = tk.IntVar()
         self.redrobothitsvar.set(0)
-        tk.Spinbox(self.robothitframe, from_=0, to=1000,
+        tk.Spinbox(self.robothitframe, from_=0, to=1000, width=5,
             textvariable=self.redrobothitsvar).pack(side=tk.LEFT)
 
         tk.Label(self.robothitframe, text="BLUE: ").pack(side=tk.LEFT, padx=5)
         self.bluerobothitsvar = tk.IntVar()
         self.bluerobothitsvar.set(0)
-        tk.Spinbox(self.robothitframe, from_=0, to=1000,
+        tk.Spinbox(self.robothitframe, from_=0, to=1000, width=5,
             textvariable=self.bluerobothitsvar).pack(side=tk.LEFT)
 
         tk.Button(self.robothitframe, text="Set", 
             command=self.onsetrobothits).pack(side=tk.LEFT, padx=5)
 
+        tk.Button(self.rightframe, text="Set FINAL",
+            command=makecallback(const.GameState.FINAL)).pack(side=tk.TOP)
 
-        # frame with game logic and game state, vertically next to each other
-        tk.Label(self.rightframe, text="Game management").pack(side=tk.TOP, pady=20)
 
-        self.logicstateframe = tk.Frame(self.rightframe)
-        self.logicstateframe.pack(side=tk.TOP)
+        # game state, in big letters
+        tk.Label(self.rightframe, text="Game state",
+            font=sectionfont).pack(side=tk.TOP, pady=20)
 
-        self.logicframe = tk.Frame(self.logicstateframe)
-        self.logicframe.pack(side=tk.LEFT)
-        tk.Label(self.logicframe, text="\n\tgame buttons here\t\n").pack()
 
-        self.stateframe = tk.Frame(self.logicstateframe)
-        self.stateframe.pack(side=tk.LEFT)
-        tk.Label(self.stateframe, text="Game state:").pack(side=tk.TOP)
-        self.statelabel = tk.Label(self.stateframe, text=const.GameState.UNKNOWN.name)
-        self.statelabel.pack(side=tk.TOP)
 
-        def makecallback(state):
-            return lambda: self.gamecontroller.setstate(state)
-        for state in const.GameState:
-            tk.Button(self.stateframe, text=state.name, width=15,
-                command=makecallback(state)).pack(side=tk.TOP)
+        self.statelabel = tk.Label(self.rightframe, 
+            text=const.GameState.UNKNOWN.name, font=statefont)
+        self.statelabel.pack(side=tk.TOP, pady=30)
+
 
 
         # ----- buttons at the bottom
@@ -190,7 +242,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
     # ----- update routines
     def updatestatelabel(self, state):
-        self.statelabel.config(text="State: {}".format(state.name))
+        self.statelabel.config(text=state.name)
 
     # ----- called by UI
     def onquit(self):
@@ -261,6 +313,17 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.gamecontroller.setrobothits(self.redrobothitsvar.get(),
             self.bluerobothitsvar.get())
         self.gamecontroller.scorechanged()
+
+    def resetscores(self):
+        # targets
+        self.gamecontroller.resetscores()
+
+        # robots
+        self.redrobothitsvar.set(0)
+        self.bluerobothitsvar.set(0)
+
+        # trigger scoreboard update (I think this is right)
+        self.onsetrobothits()
 
 
     # ----- GameChangeListener methods
