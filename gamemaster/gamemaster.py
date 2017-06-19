@@ -53,6 +53,7 @@ def main():
     gmv = GamemasterView(gc)
     gc.addchangelistener(gmv)
     gc.addhardwarechangelistener(gmv)
+    gc.addroot(gmv)
     ac.addroot(gmv)
 
 

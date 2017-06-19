@@ -7,12 +7,6 @@ events from the game controller
 
 """
 
-# ------------------------- imports -------------------------
-
-
-
-
-
 # ------------------------- GameChangeListener -------------------------
 class GameChangeListener:
 
@@ -20,8 +14,11 @@ class GameChangeListener:
     def gamestatechanged(self, state):
         pass
 
-    def gamemetadatachanged(self, metadat):
+    def gamemetadatachanged(self, metadata):
         pass
 
     def gamescorechanged(self, scoredata):
+        pass
+
+    def timervaluechanged(self, timervalue):
         pass

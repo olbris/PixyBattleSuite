@@ -97,6 +97,14 @@ class ArenaController:
         for target in self.targets.values():
             target.reset()
 
+    def startalltargets(self):
+        for target in self.targets.values():
+            target.start()
+
+    def stopalltargets(self):
+        for target in self.targets.values():
+            target.stop()
+
     # ----- async commands
     def requesttargetcommand(self, targetlist, command):
         self.root.after(0, self.targetcommand, targetlist, command)

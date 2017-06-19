@@ -46,6 +46,11 @@ class GameController:
         # game running data
         self.state = const.GameState.IDLE
 
+        # timer
+        self.timermax = const.defaultgamelength
+        self.timerstart = 0
+
+
         self.resetstoredscores()
 
 
@@ -59,6 +64,9 @@ class GameController:
     def connectarenacontroller(self, arenacontroller):
         self.arenacontroller = arenacontroller
 
+    def addroot(self, root):
+        # tk root, so we can use event loop
+        self.root = root
 
     # ----- UI and game control stuff
     # called by (eg) view either as a results of user input,
@@ -99,6 +107,43 @@ class GameController:
             const.TeamColors.BLUE: 0,
         }
 
+    def settimermax(self, timermax):
+        self.timermax = timermax
+        self.timervaluechanged(self.timermax)
+
+    # running the game
+    def startgame(self):
+
+        # state to running
+        self.setstate(const.GameState.RUNNING)
+
+        # start timer
+        self.timerstart = time.time()
+        self.root.after(0, self.timerloop)
+
+        # start targets    
+        self.startalltargets()
+
+    def stopgame(self):
+
+        # called when timer ends
+
+        # state to finished
+        self.setstate(const.GameState.FINISHED)
+
+        # stop targets
+        self.stopalltargets()
+
+    def timerloop(self):
+
+        # calculate new time left
+        remaining = self.timerstart + self.timermax - time.time()
+        self.timervaluechanged(remaining)
+
+        if remaining <= const.timeepsilon:
+            self.stopgame()
+        else:
+            self.root.after(const.timerupdateinterval, self.timerloop)
 
     # ----- hardware controls stuff
     def discovertargets(self):
@@ -112,6 +157,12 @@ class GameController:
 
     def closealltargets(self):
         self.arenacontroller.closealltargets()
+
+    def startalltargets(self):
+        self.arenacontroller.startalltargets()
+
+    def stopalltargets(self):
+        self.arenacontroller.stopalltargets()
 
     # ----- called by arena controller
     def targetsdiscovered(self, targetlist):
@@ -200,4 +251,9 @@ class GameController:
     def scorechanged(self):
         for listener in self.gamechangelisteners:
             listener.gamescorechanged(self.getscore())
+
+    def timervaluechanged(self, timervalue):
+        for listener in self.gamechangelisteners:
+            listener.timervaluechanged(timervalue)
+
 

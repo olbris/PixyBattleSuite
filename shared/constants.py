@@ -34,6 +34,15 @@ logformat = "%(asctime)s %(levelname)s: %(message)s"
 # note: these enums are not turning out to be as convenient as
 #   I hoped; would be easier just to use string constants
 
+# length of game (s)
+defaultgamelength = 180
+
+# how often to update timer (ms)
+timerupdateinterval = 100
+
+# time measurement: how close to zero (s)
+timeepsilon = 0.05
+
 def getdefaultdata():
     return {
     # metadata
@@ -49,9 +58,7 @@ def getdefaultdata():
     # state
     "statetime": time.time(),
     "state": GameState.UNKNOWN.value,
-
 }
-
 
 
 class GameState(enum.Enum):

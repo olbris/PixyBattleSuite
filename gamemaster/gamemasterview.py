@@ -30,6 +30,7 @@ maxtargets = 10
 # minimal styling:
 sectionfont = ("Helvetica", 16, "bold")
 statefont = ("Helvetica", 24, "bold")
+timerfont = ("Helvetica", 36, "bold")
 
 # ------------------------- GamemasterView -------------------------
 class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
@@ -98,7 +99,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.commandframe2, text="TEST_GREEN", command=self.ontargettestgreen).pack(side=tk.LEFT)
         tk.Button(self.commandframe2, text="TEST_REDBLUE", command=self.ontargettestredblue).pack(side=tk.LEFT)
 
-        tk.Label(self.leftframe, text="Manual state change (testing)", 
+        tk.Label(self.leftframe, text="Manual state change (for testing)", 
             font=sectionfont).pack(side=tk.TOP, pady=20)
 
         def makecallback(state):
@@ -156,6 +157,19 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
         tk.Button(self.metadataframe, text="Set", command=self.onsetmetadata).pack(side=tk.LEFT)
 
+        # reset timer
+        self.timerframe = tk.Frame(self.rightframe)
+        self.timerframe.pack(side=tk.TOP)
+
+        tk.Button(self.timerframe, text="Reset timer", 
+            command=self.resettimer).pack(side=tk.LEFT)
+        self.timervar = tk.IntVar()
+        self.timervar.set(const.defaultgamelength)
+        tk.Entry(self.timerframe, textvariable=self.timervar, 
+            width=10).pack(side=tk.LEFT)
+        tk.Label(self.timerframe, text="s").pack(side=tk.LEFT)
+
+
         # reset scores (target and robot hits)
         tk.Button(self.rightframe, text="Reset scores",
             command=self.resetscores).pack(side=tk.TOP)
@@ -173,9 +187,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         # start game and timer 
         # (incomplete!)
         tk.Button(self.rightframe, text="START game", 
-            command=lambda: None).pack(side=tk.TOP)
-
-        tk.Label(self.rightframe, text="Placeholder timer:  0:00").pack(side=tk.TOP)
+            command=self.onstartgame).pack(side=tk.TOP)
 
         tk.Label(self.rightframe, 
             text="Wait for time to elapse and transition to FINISHED").pack(side=tk.TOP)
@@ -209,6 +221,8 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.rightframe, text="Set FINAL",
             command=makecallback(const.GameState.FINAL)).pack(side=tk.TOP)
 
+        tk.Label(self.rightframe, text="Tournament director: record scores").pack(side=tk.TOP)
+
 
         # game state, in big letters
         tk.Label(self.rightframe, text="Game state",
@@ -218,7 +232,11 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
         self.statelabel = tk.Label(self.rightframe, 
             text=const.GameState.UNKNOWN.name, font=statefont)
-        self.statelabel.pack(side=tk.TOP, pady=30)
+        self.statelabel.pack(side=tk.TOP)
+
+        self.timerlabel = tk.Label(self.rightframe, font=timerfont)
+        self.timerlabel.pack(side=tk.TOP)
+        self.updatetimer(0)
 
 
 
@@ -243,6 +261,13 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
     # ----- update routines
     def updatestatelabel(self, state):
         self.statelabel.config(text=state.name)
+
+    def updatetimer(self, value):
+        minutes = int(value // 60)
+        seconds = int(value % 60)
+        if minutes <= 0 and seconds < 0:
+            seconds = 0
+        self.timerlabel.config(text="{}:{:0>2}".format(minutes,seconds))
 
     # ----- called by UI
     def onquit(self):
@@ -325,12 +350,19 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         # trigger scoreboard update (I think this is right)
         self.onsetrobothits()
 
+    def resettimer(self):
+        self.gamecontroller.settimermax(self.timervar.get())
+
+    def onstartgame(self):
+        self.gamecontroller.startgame()
+
 
     # ----- GameChangeListener methods
     def gamestatechanged(self, state):
         self.updatestatelabel(state)
 
-
+    def timervaluechanged(self, timervalue):
+        self.updatetimer(timervalue)
 
 
     # ----- HardwareChangeListener methods

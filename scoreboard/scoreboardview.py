@@ -50,7 +50,7 @@ teamnamecolor = "white"
 
 textfont = ("Gill Sans", 60)
 scorefont = ("Gill Sans", 72)
-timerfont = ("Gill Sans", 96)
+timerfont = ("Gill Sans", 72)
 barfont = ("Gill Sans", 18)
 
 # game state colors
@@ -99,7 +99,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
         # placeholder
         tk.Label(self.mainframe, text="0:00",
-            fg=fgcolor, bg=bgcolor, font=scorefont).pack(side=tk.TOP, pady=5)
+            fg=fgcolor, bg=bgcolor, font=timerfont).pack(side=tk.TOP, pady=5)
 
         self.statebar2 = tk.Label(self.mainframe, 
             text=gamestatebartext, font=barfont,
