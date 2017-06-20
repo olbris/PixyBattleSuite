@@ -61,7 +61,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.leftframe = tk.Frame(self.mainframe)
         self.leftframe.pack(side=tk.LEFT, fill=tk.BOTH)
 
-        tk.Label(self.leftframe, text="Hardware controls", 
+        tk.Label(self.leftframe, text="Hardware controls (testing)", 
             font=sectionfont).pack(side=tk.TOP, pady=20)
 
         self.hwbuttonframe = tk.Frame(self.leftframe)
@@ -99,7 +99,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         tk.Button(self.commandframe2, text="TEST_GREEN", command=self.ontargettestgreen).pack(side=tk.LEFT)
         tk.Button(self.commandframe2, text="TEST_REDBLUE", command=self.ontargettestredblue).pack(side=tk.LEFT)
 
-        tk.Label(self.leftframe, text="Manual state change (for testing)", 
+        tk.Label(self.leftframe, text="Manual state change (testing)", 
             font=sectionfont).pack(side=tk.TOP, pady=20)
 
         def makecallback(state):
@@ -125,6 +125,16 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
         tk.Button(self.rightframe, text="Discover hardware",
             command=self.ondiscover).pack(side=tk.TOP)
+
+        self.miscframe = tk.Frame(self.rightframe)
+        self.miscframe.pack(side=tk.TOP)
+
+        tk.Label(self.miscframe, text="Optional: ").pack(side=tk.LEFT)
+        tk.Button(self.miscframe, text="Set IDLE",
+            command=makecallback(const.GameState.IDLE)).pack(side=tk.LEFT)
+
+        tk.Button(self.miscframe, text="Set TESTING",
+            command=makecallback(const.GameState.TESTING)).pack(side=tk.LEFT)
 
         # PREPARING to start
         tk.Label(self.rightframe, text="Preparing", 
