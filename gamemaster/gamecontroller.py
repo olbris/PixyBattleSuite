@@ -180,7 +180,7 @@ class GameController:
         """
 
         # testing:
-        # logging.info("score received: {}".format(score))
+        # logging.info("score received: {}".format(hits))
 
         # store most recent hits line for each target,  
         #   keyed on path and team color; then sum up and notify
