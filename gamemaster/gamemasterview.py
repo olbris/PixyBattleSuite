@@ -175,9 +175,14 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             command=self.resettimer).pack(side=tk.LEFT)
         self.timervar = tk.IntVar()
         self.timervar.set(const.defaultgamelength)
+        tk.Label(self.timerframe, text=" to ").pack(side=tk.LEFT)
         tk.Entry(self.timerframe, textvariable=self.timervar, 
-            width=10).pack(side=tk.LEFT)
+            width=5).pack(side=tk.LEFT)
         tk.Label(self.timerframe, text="s").pack(side=tk.LEFT)
+        tk.Button(self.timerframe, text="Set max", 
+            command=self.resettimer).pack(side=tk.LEFT)
+        tk.Button(self.timerframe, text="Default",
+            command=self.settimerdefault).pack(side=tk.LEFT)
 
 
         # reset scores (target and robot hits)
@@ -361,6 +366,10 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.onsetrobothits()
 
     def resettimer(self):
+        self.gamecontroller.settimermax(self.timervar.get())
+
+    def settimerdefault(self):
+        self.timervar.set(const.defaultgamelength)
         self.gamecontroller.settimermax(self.timervar.get())
 
     def onstartgame(self):
