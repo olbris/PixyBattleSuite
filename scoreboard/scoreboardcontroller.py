@@ -104,7 +104,6 @@ class ScoreboardController:
         if self.timerrunning:
             # if running: increment and update
             remaining = self.starttime + self.timermax - time.time()
-            print("remaining = {}".format(remaining))
             self.timervaluechanged(remaining)
             if remaining <= const.timeepsilon:
                 self.timerrunning = False

@@ -33,6 +33,7 @@ class ScoreboardInputView(tk.Tk):
         self.messageentry = tk.Entry(self)
         self.messageentry.pack()
         tk.Button(self, text="Set", command=self.setmessage).pack()
+        tk.Button(self, text="Clear/Set", command=self.setclearmessage).pack()
 
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
@@ -46,6 +47,10 @@ class ScoreboardInputView(tk.Tk):
     def setmessage(self):
         message = self.messageentry.get()
         self.scoreboardcontroller.setmessage(message)
+
+    def setclearmessage(self):
+        self.messageentry.delete(0, tk.END)
+        self.scoreboardcontroller.setmessage("")
 
     # ----- called by UI
     def onquit(self):

@@ -119,7 +119,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
             font=sectionfont).pack(side=tk.TOP, pady=20)
 
         # SETUP
-        tk.Label(self.rightframe, text="Setup", 
+        tk.Label(self.rightframe, text="Setup (first time only)", 
             font=sectionfont, anchor=tk.W).pack(side=tk.TOP, 
             fill=tk.X, pady=10)
 

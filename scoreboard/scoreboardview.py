@@ -120,7 +120,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
         self.redteamlabel = tk.Label(self.teamnameframe, text="",
             bg=bgcolor, fg=fgcolor, font=textfont)
-        self.redteamlabel.pack(side=tk.LEFT)
+        self.redteamlabel.pack(side=tk.LEFT, padx=10)
         
         tk.Label(self.teamnameframe, text="RED", bg=teamredcolor,
             fg=teamnamecolor, font=textfont).pack(side=tk.LEFT, padx=10)
@@ -133,7 +133,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         
         self.blueteamlabel = tk.Label(self.teamnameframe, text="",
             bg=bgcolor, fg=fgcolor, font=textfont)
-        self.blueteamlabel.pack(side=tk.LEFT)
+        self.blueteamlabel.pack(side=tk.LEFT, padx=10)
 
         # score area: big stack!  grid in new frame
         self.scoreframe = tk.Frame(self.mainframe, bg=bgcolor)
@@ -144,7 +144,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.redNscore.grid(row=NROW, column=REDCOL)
         tk.Label(self.scoreframe, text="N",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=NROW, column=ICONCOL)
+            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=NROW, column=ICONCOL, padx=20)
         self.blueNscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.blueNscore.grid(row=NROW, column=BLUECOL)
@@ -154,7 +154,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.redOscore.grid(row=OROW, column=REDCOL)
         tk.Label(self.scoreframe, text="O",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=OROW, column=ICONCOL)
+            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=OROW, column=ICONCOL, padx=20)
         self.blueOscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.blueOscore.grid(row=OROW, column=BLUECOL)
@@ -164,7 +164,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.redRscore.grid(row=RROW, column=REDCOL)
         tk.Label(self.scoreframe, text="R",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=RROW, column=ICONCOL)
+            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=RROW, column=ICONCOL, padx=20)
         self.blueRscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.blueRscore.grid(row=RROW, column=BLUECOL)
@@ -174,7 +174,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.redFscore.grid(row=FROW, column=REDCOL)
         tk.Label(self.scoreframe, text="F",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=FROW, column=ICONCOL)
+            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=FROW, column=ICONCOL, padx=20)
         self.blueFscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.blueFscore.grid(row=FROW, column=BLUECOL)
@@ -184,7 +184,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.redTscore.grid(row=TROW, column=REDCOL)
         tk.Label(self.scoreframe, text="",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=TROW, column=ICONCOL)
+            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=TROW, column=ICONCOL, padx=20)
         self.blueTscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=scorefont)
         self.blueTscore.grid(row=TROW, column=BLUECOL)
@@ -202,7 +202,6 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         return self.viewtype is ViewType.PRIVATE
 
     def updatetimer(self, value):
-        print("updatetimer to {}".format(value))
         minutes = int(value // 60)
         seconds = int(value % 60)
         if minutes <= 0 and seconds < 0:

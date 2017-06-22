@@ -44,7 +44,7 @@ class GameController:
         self.gamemetadata = {}
 
         # game running data
-        self.state = const.GameState.IDLE
+        self.state = const.GameState.UNKNOWN
 
         # timer
         self.timermax = const.defaultgamelength
