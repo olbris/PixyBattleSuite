@@ -82,5 +82,11 @@ class ScoreRecorder(GameChangeListener):
         self.scorekeeperput("score", data=scoredata)
         logging.info("game score changed to {}".format(scoredata))
 
+    def timermaxchanged(self, timermax):
+        self.scorekeeperput("timer/max", data={"timermax": timermax})
+        logging.info("timer max changed to {}".format(timermax))
 
+    def timerstarted(self, starttime):
+        self.scorekeeperput("timer/start", data={"starttime": starttime})
+        logging.info("timer started at {}".format(starttime))
 

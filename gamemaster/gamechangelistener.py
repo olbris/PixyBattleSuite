@@ -19,6 +19,12 @@ class GameChangeListener:
 
     def gamescorechanged(self, scoredata):
         pass
-
+    
     def timervaluechanged(self, timervalue):
+        pass
+
+    def timermaxchanged(self, timermax):
+        pass
+
+    def timerstarted(self, starttime):
         pass

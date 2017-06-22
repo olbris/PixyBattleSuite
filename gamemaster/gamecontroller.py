@@ -110,6 +110,7 @@ class GameController:
     def settimermax(self, timermax):
         self.timermax = timermax
         self.timervaluechanged(self.timermax)
+        self.timermaxchanged(self.timermax)
 
     # running the game
     def startgame(self):
@@ -120,6 +121,7 @@ class GameController:
         # start timer
         self.timerstart = time.time()
         self.root.after(0, self.timerloop)
+        self.timerstarted(self.timerstart)
 
         # start targets    
         self.startalltargets()
@@ -256,4 +258,10 @@ class GameController:
         for listener in self.gamechangelisteners:
             listener.timervaluechanged(timervalue)
 
+    def timermaxchanged(self, timermax):
+        for listener in self.gamechangelisteners:
+            listener.timermaxchanged(timermax)
 
+    def timerstarted(self, starttime):
+        for listener in self.gamechangelisteners:
+            listener.timerstarted(starttime)

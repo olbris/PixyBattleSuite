@@ -107,6 +107,8 @@ apiurl = "http://127.0.0.1:5000"
 
 # ----- scoreboard
 # how often scoreboard should poll the score service, ms: 
-scoreservicepollinterval = 1000
+scoreservicepollinterval = 100
+
+timerservicepollinterval = 50
 
 
