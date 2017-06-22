@@ -98,8 +98,10 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.statebar1.pack(side=tk.TOP)
 
         # placeholder
-        tk.Label(self.mainframe, text="0:00",
-            fg=fgcolor, bg=bgcolor, font=timerfont).pack(side=tk.TOP, pady=5)
+        self.timerlabel = tk.Label(self.mainframe,
+            fg=fgcolor, bg=bgcolor, font=timerfont)
+        self.timerlabel.pack(side=tk.TOP, pady=5)
+        self.updatetimer(0)
 
         self.statebar2 = tk.Label(self.mainframe, 
             text=gamestatebartext, font=barfont,
@@ -188,11 +190,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.blueTscore.grid(row=TROW, column=BLUECOL)
 
 
-
-
-
-        # test message display
-        # maybe put right under timer, or over timer/under top label>
+        # message
         self.messagelabel = tk.Label(self.mainframe, text="",
             bg=bgcolor, fg=fgcolor, font=textfont)
         self.messagelabel.pack(side=tk.TOP, pady=40)
@@ -202,6 +200,15 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         return self.viewtype is ViewType.PUBLIC
     def isprivateview(self):
         return self.viewtype is ViewType.PRIVATE
+
+    def updatetimer(self, value):
+        print("updatetimer to {}".format(value))
+        minutes = int(value // 60)
+        seconds = int(value % 60)
+        if minutes <= 0 and seconds < 0:
+            seconds = 0
+        self.timerlabel.config(text="{}:{:0>2}".format(minutes,seconds))
+
 
     # ----- ScoreChangeListener stuff
     def messagechanged(self, message):
@@ -237,7 +244,8 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.blueFscore.config(text=blueF)
         self.blueTscore.config(text=bluetotal)
 
-
+    def timervaluechanged(self, timervalue):
+        self.updatetimer(timervalue)
 
 
 

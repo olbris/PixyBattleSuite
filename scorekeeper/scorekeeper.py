@@ -29,7 +29,9 @@ gamedata["statetime"] = time.time()
 
 # timer stuff is special
 timermax = const.defaultgamelength
+timermaxtime = time.time()
 starttime = 0
+starttimetime = time.time()
 
 
 # ------------------------- server -------------------------
@@ -79,24 +81,26 @@ class GameScore(Resource):
 @api.route("/timer/max")
 class TimerMax(Resource):
     def get(self):
-        return {"timermax": timermax}
+        return {"timermax": timermax, "timermaxtime": timermaxtime}
 
     def put(self):
-        global timermax
+        global timermax, timermaxtime
         data = request.get_json()
         timermax = data["timermax"]
-        return {"timermax": timermax}
+        timermaxtime = time.time()
+        return {"timermax": timermax, "timermaxtime": timermaxtime}
 
 @api.route("/timer/start")
 class TimerStart(Resource):
     def get(self):
-        return {"starttime": starttime}
+        return {"starttime": starttime, "starttimetime": starttimetime}
 
     def put(self):
-        global starttime
+        global starttime, starttimetime
         data = request.get_json()
         starttime = data["starttime"]
-        return {"starttime": starttime}
+        starttimetime = time.time()
+        return {"starttime": starttime, "starttimetime": starttimetime}
 
 @api.route("/data")
 class GameData(Resource):

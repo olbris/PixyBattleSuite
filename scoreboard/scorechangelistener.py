@@ -26,3 +26,8 @@ class ScoreChangeListener:
     # game state
     def gamestatechanged(self, state):
         pass
+
+    # timer
+    def timervaluechanged(self, timervalue):
+        pass
+
