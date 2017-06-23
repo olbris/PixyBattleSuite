@@ -54,11 +54,11 @@ Note that some non-software reminders are displayed in the text of the UI (eg, r
 
 The typical state cycle is: PREPARING - READY - RUNNING - FINISHED - FINAL
 
-PREPARING = resetting score, setting teams, robots being placed into the ring
-READY = start is imminent, within 10-15s
-RUNNING = timer is running, game is on
-FINISHED = timer has run out; scoring is over
-FINAL = robot hit scores reported and added in; score is final
+* PREPARING = resetting score, setting teams, robots being placed into the ring
+* READY = start is imminent, within 10-15s
+* RUNNING = timer is running, game is on
+* FINISHED = timer has run out; scoring is over
+* FINAL = robot hit scores reported and added in; score is final
 
 There is no way to pause the game once started. That would not be easy...
 
