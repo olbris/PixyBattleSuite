@@ -160,7 +160,7 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
 
         tk.Label(self.metadataframe, text="BLUE team: ").pack(side=tk.LEFT)
         self.blueteamvar = tk.IntVar()
-        self.blueteamvar.set(teamnumberlist[0])
+        self.blueteamvar.set(teamnumberlist[1])
         self.blueteammenu = tk.OptionMenu(self.metadataframe, self.blueteamvar,
             *teamnumberlist)
         self.blueteammenu.pack(side=tk.LEFT)

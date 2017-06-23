@@ -14,7 +14,6 @@ import time
 # ----- general data
 teamnames = {
     0: "(team not set)",
-    1: "Team 1",
     2: "Team 2",
     3: "Team 3",
     4: "Team 4",
