@@ -80,7 +80,11 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
         # set up UI
         
-        self.geometry("1500x1000")
+        if self.ispublicview():
+            self.geometry("1500x1000")
+        else:
+            self.geometry("1000x1000+900+10")
+
 
         self.mainframe = tk.Frame(self, bg=bgcolor)
         self.mainframe.pack(side=tk.TOP, expand=1, fill=tk.BOTH)

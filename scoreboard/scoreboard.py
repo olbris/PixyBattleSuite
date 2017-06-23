@@ -42,10 +42,10 @@ def main():
 
     # start views; hook to main controller (add listeners)
     sv1 = ScoreboardView(siv, ViewType.PUBLIC)
-    # sv2 = ScoreboardView(siv, ViewType.PRIVATE)
+    sv2 = ScoreboardView(siv, ViewType.PRIVATE)
 
     sc.addchangelistener(sv1)
-    # sc.addchangelistener(sv2)
+    sc.addchangelistener(sv2)
 
 
 

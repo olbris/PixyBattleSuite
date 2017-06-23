@@ -25,15 +25,18 @@ class ScoreboardInputView(tk.Tk):
 
         # set up UI
         self.title("Scoreboard control")
-        self.geometry("300x300+100+500")
+        self.geometry("+200+900")
 
 
-        # test message setter:
-        tk.Label(self, text="Set messsage:").pack()
-        self.messageentry = tk.Entry(self)
-        self.messageentry.pack()
-        tk.Button(self, text="Set", command=self.setmessage).pack()
-        tk.Button(self, text="Clear/Set", command=self.setclearmessage).pack()
+        # message setter:
+        self.messageframe = tk.Frame(self)
+        self.messageframe.pack(side=tk.TOP, pady=20)
+
+        tk.Label(self.messageframe, text="Set messsage:").pack(side=tk.LEFT)
+        self.messageentry = tk.Entry(self.messageframe)
+        self.messageentry.pack(side=tk.LEFT)
+        tk.Button(self.messageframe, text="Set", command=self.setmessage).pack(side=tk.LEFT)
+        tk.Button(self.messageframe, text="Clear/Set", command=self.setclearmessage).pack(side=tk.LEFT)
 
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
