@@ -26,8 +26,18 @@ class ScoreboardController:
 
     def __init__(self):
         
-        # UI message
+        # UI stuff
+        # primary is intended to be public view, secondary is
+        #   the view for the organizers
+        self.views = {}
+
+        # view properties
+        self.viewvisibility = {}
+
+
+        # message to display on views
         self.message = ""
+
 
         # all the game data
         self.gamedata = const.getdefaultdata()
@@ -44,6 +54,11 @@ class ScoreboardController:
 
 
     # ----- various setup: listeners, etc.
+    def addview(self, view, viewtype):
+        self.views[viewtype] = view
+        self.viewvisibility[viewtype] = True
+        self.addchangelistener(view)
+
     def addchangelistener(self, listener):
         self.scorechangelisteners.append(listener)
 
@@ -131,6 +146,14 @@ class ScoreboardController:
     def setmessage(self, message):
         self.message = message
         self.messagechanged()
+
+    def toggleviewvisibility(self, viewtype):
+        if self.viewvisibility[viewtype]:
+            self.views[viewtype].withdraw()
+            self.viewvisibility[viewtype] = False
+        else:
+            self.views[viewtype].deiconify()
+            self.viewvisibility[viewtype] = True
 
 
     # ----- notifications

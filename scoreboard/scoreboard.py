@@ -26,12 +26,8 @@ def main():
         format=const.logformat,
         )
 
-
-
     # start main controller
     sc = ScoreboardController()
-
-    # start score watcher; hook to main controller
 
 
     # start main input controls, which is the Tk
@@ -40,13 +36,9 @@ def main():
     sc.addroot(siv)
 
 
-    # start views; hook to main controller (add listeners)
-    sv1 = ScoreboardView(siv, ViewType.PUBLIC)
-    sv2 = ScoreboardView(siv, ViewType.PRIVATE)
-
-    sc.addchangelistener(sv1)
-    sc.addchangelistener(sv2)
-
+    # start views; hook to main controller
+    sc.addview(ScoreboardView(siv, ViewType.PRIMARY), ViewType.PRIMARY)
+    sc.addview(ScoreboardView(siv, ViewType.SECONDARY), ViewType.SECONDARY)
 
 
     # run event loop

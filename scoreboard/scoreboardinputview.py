@@ -14,6 +14,7 @@ import tkinter as tk
 
 # local
 from shared import constants as const
+from scoreboard.scoreboardview import ViewType
 
 
 # ------------------------- ScoreboardInputView -------------------------
@@ -38,6 +39,18 @@ class ScoreboardInputView(tk.Tk):
         tk.Button(self.messageframe, text="Set", command=self.setmessage).pack(side=tk.LEFT)
         tk.Button(self.messageframe, text="Clear/Set", command=self.setclearmessage).pack(side=tk.LEFT)
 
+        # visibility
+        tk.Label(self, text="Window visibility:").pack(side=tk.TOP)
+        self.visibilityframe = tk.Frame(self)
+        self.visibilityframe.pack(side=tk.TOP)
+
+        tk.Button(self.visibilityframe, text="Toggle primary",
+            command=self.toggleprimaryvisibility).pack(side=tk.LEFT)
+        tk.Button(self.visibilityframe, text="Toggle secondary",
+            command=self.togglesecondaryvisibility).pack(side=tk.LEFT)
+
+
+
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
         self.buttonframe.pack(side=tk.BOTTOM, fill=tk.X)
@@ -54,6 +67,12 @@ class ScoreboardInputView(tk.Tk):
     def setclearmessage(self):
         self.messageentry.delete(0, tk.END)
         self.scoreboardcontroller.setmessage("")
+
+    def toggleprimaryvisibility(self):
+        self.scoreboardcontroller.toggleviewvisibility(ViewType.PRIMARY)
+
+    def togglesecondaryvisibility(self):
+        self.scoreboardcontroller.toggleviewvisibility(ViewType.SECONDARY)
 
     # ----- called by UI
     def onquit(self):

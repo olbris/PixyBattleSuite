@@ -20,8 +20,8 @@ from scoreboard.scorechangelistener import ScoreChangeListener
 
 # ------------------------- constants -------------------------
 class ViewType(enum.Enum):
-    PUBLIC = "public"
-    PRIVATE = "private"
+    PRIMARY = "primary"
+    SECONDARY = "secondary"
 
 # rows in score grid
 NROW = 0
@@ -79,8 +79,27 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
 
         # set up UI
+
+        # make the primary window borderless
+        if self.isprimaryview():
+            # got this from the Internet; I wasn't sure which parts
+            #   were vital or not, so I copied them all and tested;
+            # strangely enough, the only thing that seems necessary
+            #   is the single command that's *supposed* to work, but
+            #   is (a) reputed to be flaky on Mac, and (b) didn't
+            #   work in initial testing
+
+            # Hide the root window drag bar and close button
+            self.overrideredirect(True)
+            # Make the root window always on top
+            # self.wm_attributes("-topmost", True)
+            # Make the window content area transparent
+            # self.wm_attributes("-transparent", True)
+            # Set the root window background color to a transparent color
+            # self.config(bg='systemTransparent')
         
-        if self.ispublicview():
+
+        if self.isprimaryview():
             self.geometry("1500x1000")
         else:
             self.geometry("1000x1000+900+10")
@@ -200,10 +219,8 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.messagelabel.pack(side=tk.TOP, pady=40)
 
 
-    def ispublicview(self):
-        return self.viewtype is ViewType.PUBLIC
-    def isprivateview(self):
-        return self.viewtype is ViewType.PRIVATE
+    def isprimaryview(self):
+        return self.viewtype is ViewType.PRIMARY
 
     def updatetimer(self, value):
         minutes = int(value // 60)
