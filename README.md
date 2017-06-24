@@ -62,4 +62,8 @@ The typical state cycle is: PREPARING - READY - RUNNING - FINISHED - FINAL
 
 There is no way to pause the game once started. That would not be easy...
 
+The scoreboard consists of three windows: a control window, and two views (primary and secondary). The primary view is expected to be on a second display facing the audience.  The control window and secondary view are expected to be on the same screen as the gamemaster. Note that the primary view is a borderless window; use the controls to move it and hide/show it.
+
+You may display a message on the scoreboard using the "set message" feature.
+
 
