@@ -155,6 +155,24 @@ class ScoreboardController:
             self.views[viewtype].deiconify()
             self.viewvisibility[viewtype] = True
 
+    def moveviewrelative(self, dx, dy, viewtype):
+        width, height, ox, oy = self.getgeometry(viewtype)
+        ox += dx
+        oy += dy
+        # check for minimum (left screen edge) but not maximum
+        ox = max(0, ox)
+        oy = max(0, oy)
+        self.updategeometry((width, height, ox, oy), viewtype)
+
+    def getgeometry(self, viewtype):
+        geometrystring = self.views[viewtype].geometry()
+        geometrystring = geometrystring.replace("+", " ").replace("x", " ")
+        items = geometrystring.split()
+        return int(items[0]), int(items[1]), int(items[2]), int(items[3])
+
+    def updategeometry(self, geometry, viewtype):
+        geometrystring = "{}x{}+{}+{}".format(*geometry)
+        self.views[viewtype].geometry(geometrystring)
 
     # ----- notifications
     def messagechanged(self):

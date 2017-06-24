@@ -49,7 +49,30 @@ class ScoreboardInputView(tk.Tk):
         tk.Button(self.visibilityframe, text="Toggle secondary",
             command=self.togglesecondaryvisibility).pack(side=tk.LEFT)
 
-
+        # primary window position (it's borderless, can't drag it)
+        tk.Label(self, text="Move borderless primary window:").pack(side=tk.TOP)
+        self.movexframe = tk.Frame(self)
+        self.movexframe.pack(side=tk.TOP)
+        tk.Button(self.movexframe, text="-100", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(-100, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        tk.Button(self.movexframe, text="-10", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(-10, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        tk.Label(self.movexframe, text= " x ").pack(side=tk.LEFT)
+        tk.Button(self.movexframe, text="+10", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(10, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        tk.Button(self.movexframe, text="+100", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(100, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        self.moveyframe = tk.Frame(self)
+        self.moveyframe.pack(side=tk.TOP)
+        tk.Button(self.moveyframe, text="-100", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, -100, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        tk.Button(self.moveyframe, text="-10", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, -10, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        tk.Label(self.moveyframe, text= " y ").pack(side=tk.LEFT)
+        tk.Button(self.moveyframe, text="+10", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, 10, ViewType.PRIMARY)).pack(side=tk.LEFT)
+        tk.Button(self.moveyframe, text="+100", 
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, 100, ViewType.PRIMARY)).pack(side=tk.LEFT)
 
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
