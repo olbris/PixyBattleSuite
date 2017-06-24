@@ -37,7 +37,7 @@ logformat = "%(asctime)s %(levelname)s: %(message)s"
 defaultgamelength = 180
 
 # how often to update timer (ms)
-timerupdateinterval = 100
+timerupdateinterval = 50
 
 # time measurement: how close to zero (s)
 timeepsilon = 0.05
