@@ -8,6 +8,7 @@ shared constants
 # ------------------------- imports -------------------------
 # std lib
 import enum
+import os
 import time
 
 
@@ -27,7 +28,12 @@ def getteamnumberlist():
 # logging
 logformat = "%(asctime)s %(levelname)s: %(message)s"
 
-
+logdirname = "logs"
+def getlogpath():
+    logpath = os.path.join(os.path.dirname(os.path.dirname(__file__)), logdirname)
+    if not os.path.exists(logpath):
+        os.mkdir(logpath)
+    return logpath
 
 # ----- game related
 # note: these enums are not turning out to be as convenient as

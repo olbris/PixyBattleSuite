@@ -37,12 +37,12 @@ The scorekeeper must go first. The other two probably don't matter in order.
 
 The gamemaster UI is meant to guide you through running the game.
 
-**Left side--hardware and testing**
+**Gamemaster, left side: hardware and testing**
 * Everything on the left side is for testing. In normal operation, you don't need it.
 ** Click "discover" to find all connected targets.  Select the targets you want to send a command to, then click the button.
 ** Game state changes: *really* shouldn't be messed with. Some game state changes trigger other behaviors, and if you do them out of order, unpredictable things could happen.
 
-**Right side--game controls**
+**Gamemaster, right side: game controls**
 
 The right-side UI is laid out in the order you will use things in the game.
 
@@ -61,6 +61,12 @@ The typical state cycle is: PREPARING - READY - RUNNING - FINISHED - FINAL
 * FINAL = robot hit scores reported and added in; score is final
 
 There is no way to pause the game once started. That would not be easy...
+
+**Logging** 
+
+Everything that goes from the gamemaster to the scorekeeper is logged to a filed in the pixybattlesuite/logs directory.  All three components also send logging information to their terminals.
+
+**Scoreboard**
 
 The scoreboard consists of three windows: a control window, and two views (primary and secondary). The primary view is expected to be on a second display facing the audience.  The control window and secondary view are expected to be on the same screen as the gamemaster. Note that the primary view is a borderless window; use the controls to move it and hide/show it.
 
