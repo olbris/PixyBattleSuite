@@ -97,10 +97,10 @@ class GameController:
 
     def resetstoredscores(self):
         # holds hit data from targets, per device and team color
-        # also holds summed under device = "total", which we seed
-        self.targethits = {
-            ("total", const.TeamColors.RED): (0, 0, 0),
-            ("total", const.TeamColors.BLUE): (0, 0, 0),
+        self.targethits = {}
+        self.targettotalhits = {
+            const.TeamColors.RED: (0, 0, 0),
+            const.TeamColors.BLUE: (0, 0, 0),
         }
         self.robothits = {
             const.TeamColors.RED: 0,
@@ -184,6 +184,7 @@ class GameController:
         # testing:
         # logging.info("score received: {}".format(hits))
 
+
         # store most recent hits line for each target,  
         #   keyed on path and team color; then sum up and notify
         self.targethits[hits[:2]] = hits[2:]
@@ -202,8 +203,8 @@ class GameController:
                     bluetotal = add3tuple(bluetotal, self.targethits[devicepath, color])
 
             # store the totals, too:
-            self.targethits["total", const.TeamColors.RED] = redtotal
-            self.targethits["total", const.TeamColors.BLUE] = bluetotal
+            self.targettotalhits[const.TeamColors.RED] = redtotal
+            self.targettotalhits[const.TeamColors.BLUE] = bluetotal
 
             # notify:
             self.scorechanged()
@@ -213,13 +214,14 @@ class GameController:
 
             self.lasthitsreported = time.time()
 
+
     def getscore(self):
         
         # generate score data from hit data; get robot hits from UI;
         #   multiply out hits to scores
 
-        redhits = self.targethits["total", const.TeamColors.RED]
-        bluehits = self.targethits["total", const.TeamColors.BLUE]
+        redhits = self.targettotalhits[const.TeamColors.RED]
+        bluehits = self.targettotalhits[const.TeamColors.BLUE]
         
         # robot hits = 0 for now (UI not connected)
         redscore = (
