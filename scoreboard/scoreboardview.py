@@ -24,11 +24,19 @@ class ViewType(enum.Enum):
     SECONDARY = "secondary"
 
 # rows in score grid
-NROW = 0
-OROW = 1
-RROW = 2
-FROW = 3
-TROW = 4
+# version with subscores above, total below:
+# NROW = 0
+# OROW = 1
+# RROW = 2
+# FROW = 3
+# TROW = 4
+
+# version with total score at top, subscores below:
+NROW = 1
+OROW = 2
+RROW = 3
+FROW = 4
+TROW = 0
 
 # columns in score grid:
 REDCOL = 0
@@ -48,8 +56,11 @@ teambluecolor = "blue"
 teamnamecolor = "white"
 
 
+headerfont = ("Gill Sans", 96)
 textfont = ("Gill Sans", 60)
-scorefont = ("Gill Sans", 72)
+# first draft had all scores at 72
+subscorefont = ("Gill Sans", 60)
+mainscorefont = ("Gill Sans", 96)
 timerfont = ("Gill Sans", 72)
 barfont = ("Gill Sans", 18)
 
@@ -67,6 +78,8 @@ gamestatecolors = {
 }
 gamestatebartext = "                         "
 
+
+
 # ------------------------- ScoreboardView -------------------------
 class ScoreboardView(ScoreChangeListener, tk.Toplevel):
     def __init__(self, root, viewtype):
@@ -77,6 +90,9 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.viewtype = viewtype
 
 
+        # game state
+        # we need this for calculating correct score
+        self.gamestate = const.GameState.UNKNOWN
 
         # set up UI
 
@@ -110,7 +126,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
         # top label
         tk.Label(self.mainframe, text="PixyBattle 2017",
-            fg=fgcolor, bg=bgcolor, font=("Gill Sans", 96)).pack(side=tk.TOP, pady=20)
+            fg=fgcolor, bg=bgcolor, font=headerfont).pack(side=tk.TOP, pady=20)
 
 
         # timer area, plus game state color bars
@@ -164,52 +180,90 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
         # N = score off neutral targets
         self.redNscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redNscore.grid(row=NROW, column=REDCOL)
+
+        # icons: original placeholder: use letters
         tk.Label(self.scoreframe, text="N",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=NROW, column=ICONCOL, padx=20)
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=NROW, column=ICONCOL, padx=20)
+
+        '''
+        # test graphic instead of letter
+        canvassize = 64
+        delta = 10
+        iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
+        c = tk.Canvas(self.scoreframe, 
+            width=canvassize, height=canvassize,
+            bg=bgcolor,
+            # this line removes a white border around the canvas
+            highlightthickness=0,
+            )
+        # single green circle:
+        # c.create_arc(0, 0, s, s, 
+        #     fill="green",
+        #     outline="green",
+        #     start=0.0, 
+        #     extent=359.0,
+        #     )
+        # or red/blue semi-circle
+        c.create_arc(*iconbounds,
+            fill="red",
+            outline="red",
+            start=-90.0, 
+            extent=180.0,
+            )
+        c.create_arc(*iconbounds, 
+            fill="blue",
+            outline="blue",
+            start=90.0, 
+            extent=180.0,
+            )
+        c.grid(row=NROW, column=ICONCOL, sticky="wens", padx=20)
+        '''
+
+
         self.blueNscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueNscore.grid(row=NROW, column=BLUECOL)
 
         # O = score off opposing team targets
         self.redOscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redOscore.grid(row=OROW, column=REDCOL)
         tk.Label(self.scoreframe, text="O",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=OROW, column=ICONCOL, padx=20)
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=OROW, column=ICONCOL, padx=20)
         self.blueOscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueOscore.grid(row=OROW, column=BLUECOL)
 
         # R = score off opposing team robots
         self.redRscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redRscore.grid(row=RROW, column=REDCOL)
         tk.Label(self.scoreframe, text="R",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=RROW, column=ICONCOL, padx=20)
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=RROW, column=ICONCOL, padx=20)
         self.blueRscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueRscore.grid(row=RROW, column=BLUECOL)
 
         # F = score off final target ownership
         self.redFscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redFscore.grid(row=FROW, column=REDCOL)
         tk.Label(self.scoreframe, text="F",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=FROW, column=ICONCOL, padx=20)
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=FROW, column=ICONCOL, padx=20)
         self.blueFscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueFscore.grid(row=FROW, column=BLUECOL)
 
-        # T = total score; maybe no "icon", maybe bigger font...
+        # T = total score; no "icon", maybe bigger font...
         self.redTscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=mainscorefont)
         self.redTscore.grid(row=TROW, column=REDCOL)
         tk.Label(self.scoreframe, text="",
-            bg=bgcolor, fg=fgcolor, font=scorefont).grid(row=TROW, column=ICONCOL, padx=20)
+            bg=bgcolor, fg=fgcolor, font=mainscorefont).grid(row=TROW, column=ICONCOL, padx=20)
         self.blueTscore = tk.Label(self.scoreframe, text=0,
-            bg=bgcolor, fg=fgcolor, font=scorefont)
+            bg=bgcolor, fg=fgcolor, font=mainscorefont)
         self.blueTscore.grid(row=TROW, column=BLUECOL)
 
 
@@ -247,10 +301,17 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         redN, redO, redR, redF = data["redscore"]
         blueN, blueO, blueR, blueF = data["bluescore"]
 
-        redtotal = redN + redO + redR + redF
-        bluetotal = blueN + blueO + blueR + blueF
-
-        # maybe don't show final hits in some game states?
+        # don't show final hits until final game states
+        if (self.gamestate is const.GameState.FINAL or 
+            self.gamestate is const.GameState.FINISHED):
+            redtotal = redN + redO + redR + redF
+            bluetotal = blueN + blueO + blueR + blueF
+        else:
+            # could leave out robot scores, too, as they
+            #   aren't expected to be filled in until the
+            #   end, but it doesn't really matter
+            redtotal = redN + redO + redR
+            bluetotal = blueN + blueO + blueR
 
         self.redNscore.config(text=redN)
         self.redOscore.config(text=redO)
