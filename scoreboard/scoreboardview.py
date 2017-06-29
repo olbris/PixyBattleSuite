@@ -79,6 +79,20 @@ gamestatecolors = {
 gamestatebartext = "                         "
 
 
+# "icon" related
+class IconType(enum.Enum):
+    INITIAL = "initial"
+    WORD = "word"
+    CANVAS ="canvas"
+# icon = IconType.INITIAL
+icon = IconType.CANVAS
+
+# icon drawn on tk Canvas:
+canvassize = 64
+delta = 10
+iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
+
+
 
 # ------------------------- ScoreboardView -------------------------
 class ScoreboardView(ScoreChangeListener, tk.Toplevel):
@@ -182,46 +196,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redNscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redNscore.grid(row=NROW, column=REDCOL)
-
-        # icons: original placeholder: use letters
-        tk.Label(self.scoreframe, text="N",
-            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=NROW, column=ICONCOL, padx=20)
-
-        '''
-        # test graphic instead of letter
-        canvassize = 64
-        delta = 10
-        iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
-        c = tk.Canvas(self.scoreframe, 
-            width=canvassize, height=canvassize,
-            bg=bgcolor,
-            # this line removes a white border around the canvas
-            highlightthickness=0,
-            )
-        # single green circle:
-        # c.create_arc(0, 0, s, s, 
-        #     fill="green",
-        #     outline="green",
-        #     start=0.0, 
-        #     extent=359.0,
-        #     )
-        # or red/blue semi-circle
-        c.create_arc(*iconbounds,
-            fill="red",
-            outline="red",
-            start=-90.0, 
-            extent=180.0,
-            )
-        c.create_arc(*iconbounds, 
-            fill="blue",
-            outline="blue",
-            start=90.0, 
-            extent=180.0,
-            )
-        c.grid(row=NROW, column=ICONCOL, sticky="wens", padx=20)
-        '''
-
-
+        self.geticon("N").grid(row=NROW, column=ICONCOL, padx=20)
         self.blueNscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueNscore.grid(row=NROW, column=BLUECOL)
@@ -230,8 +205,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redOscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redOscore.grid(row=OROW, column=REDCOL)
-        tk.Label(self.scoreframe, text="O",
-            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=OROW, column=ICONCOL, padx=20)
+        self.geticon("O").grid(row=OROW, column=ICONCOL, padx=20)
         self.blueOscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueOscore.grid(row=OROW, column=BLUECOL)
@@ -240,8 +214,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redRscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redRscore.grid(row=RROW, column=REDCOL)
-        tk.Label(self.scoreframe, text="R",
-            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=RROW, column=ICONCOL, padx=20)
+        self.geticon("R").grid(row=RROW, column=ICONCOL, padx=20)
         self.blueRscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueRscore.grid(row=RROW, column=BLUECOL)
@@ -250,8 +223,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redFscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redFscore.grid(row=FROW, column=REDCOL)
-        tk.Label(self.scoreframe, text="F",
-            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=FROW, column=ICONCOL, padx=20)
+        self.geticon("F").grid(row=FROW, column=ICONCOL, padx=20)
         self.blueFscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueFscore.grid(row=FROW, column=BLUECOL)
@@ -283,6 +255,71 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             seconds = 0
         self.timerlabel.config(text="{}:{:0>2}".format(minutes,seconds))
 
+    # "icon" creation calls
+    def geticon(self, which):
+        # which = initial code = one of N, O, R, F
+        if icon is IconType.INITIAL:
+            return tk.Label(self.scoreframe, text=which, bg=bgcolor, fg=fgcolor, font=subscorefont)
+        elif icon is IconType.WORD:
+            if which == "N":
+                word = "neutral"
+            elif which == "O":
+                word = "opposing"
+            elif which == "R":
+                word = "robot"
+            elif which == "F":
+                word = "final"
+            else:
+                word = "unknown"
+            return tk.Label(self.scoreframe, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
+        elif icon is IconType.CANVAS:
+            c = tk.Canvas(self.scoreframe, 
+                width=canvassize, height=canvassize,
+                bg=bgcolor,
+                # this line removes a white border around the canvas
+                highlightthickness=0,
+                )
+            if which == "N":
+                # green circle
+                c.create_arc(*iconbounds, 
+                    fill="green",
+                    outline="green",
+                    start=0.0, 
+                    extent=359.0,
+                    )
+            elif which == "O":
+                # half red/half blue circle
+                c.create_arc(*iconbounds,
+                    fill="red",
+                    outline="red",
+                    start=-90.0, 
+                    extent=180.0,
+                    )
+                c.create_arc(*iconbounds, 
+                    fill="blue",
+                    outline="blue",
+                    start=90.0, 
+                    extent=180.0,
+                    )
+            elif which == "R":
+                # would like a robot silhouette in red/blue, but for now
+                #    just do a yellow circle as a placeholder
+                c.create_arc(*iconbounds, 
+                    fill="yellow",
+                    outline="yellow",
+                    start=0.0, 
+                    extent=359.0,
+                    )
+            elif which == "F":
+                # would like to do a little arena layout schematic, but
+                #   as a placeholder, purple circle:
+                c.create_arc(*iconbounds, 
+                    fill="purple",
+                    outline="purple",
+                    start=0.0, 
+                    extent=359.0,
+                    )
+            return c               
 
     # ----- ScoreChangeListener stuff
     def messagechanged(self, message):
