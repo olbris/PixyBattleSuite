@@ -90,9 +90,6 @@ icon = IconType.CANVAS
 
 # icon drawn on tk Canvas:
 canvassize = 64
-delta = 10
-iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
-
 
 
 # ------------------------- ScoreboardView -------------------------
@@ -282,6 +279,8 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             word = "unknown"
         return tk.Label(self.scoreframe, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
     def geticoncanvas(self, which):
+        delta = 10
+        iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
         c = tk.Canvas(self.scoreframe, 
             width=canvassize, height=canvassize,
             bg=bgcolor,
@@ -311,7 +310,8 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
                 extent=180.0,
                 )
         elif which == "R":
-            # would like a robot silhouette in red/blue, but for now
+            # would like a robot silhouette in red/blue
+            '''
             #    just do a yellow circle as a placeholder
             c.create_arc(*iconbounds, 
                 fill="yellow",
@@ -319,12 +319,92 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
                 start=0.0, 
                 extent=359.0,
                 )
+            '''
+            # do a yellow star-like zap/explosion icon
+            x1, y1, x2, y2 = iconbounds
+            dx = x2 - x1
+            dy = y2 - y1
+            c.create_polygon(
+                x1, y1, 
+                x1 + dx // 2, y1 + dy // 3,
+                x2, y1, 
+                x2 - dx // 3, y1 + dy //2,
+                x2, y2,
+                x1 + dx // 2, y2 - dy // 3,
+                x1, y2, 
+                x1 + dx // 3, y1 + dy // 2,
+
+                fill="yellow",
+                outline="red",
+                width=3,
+                )
+
         elif which == "F":
-            # would like to do a little arena layout schematic, but
-            #   as a placeholder, purple circle:
-            c.create_arc(*iconbounds, 
-                fill="purple",
-                outline="purple",
+            # little arena layout schematic
+            x1, y1, x2, y2 = iconbounds
+            dx = x2 - x1
+            dy = y2 - y1
+            r = 4
+            # left edge, halfway down
+            c.create_arc(
+                x1 - r, y1 + dy // 2 - r, 
+                x1 + r, y1 + dy // 2 + r, 
+                fill="red",
+                outline="red",
+                start=0.0, 
+                extent=359.0,
+                )
+            # quarter over, quarter down
+            c.create_arc(
+                x1 + dx // 4 - r, y1 + dy // 4 - r, 
+                x1 + dx // 4 + r, y1 + dy // 4 + r, 
+                fill="blue",
+                outline="blue",
+                start=0.0, 
+                extent=359.0,
+                )
+            # quarter over, quarter up
+            c.create_arc(
+                x1 + dx // 4 - r, y2 - dy // 4 - r, 
+                x1 + dx // 4 + r, y2 - dy // 4 + r, 
+                fill="green",
+                outline="green",
+                start=0.0, 
+                extent=359.0,
+                )
+            # middle, halfway down
+            c.create_arc(
+                x1 + dx // 2 - r, y1 + dy // 2 - r, 
+                x1 + dx // 2 + r, y1 + dy // 2 + r, 
+                fill="green",
+                outline="green",
+                start=0.0, 
+                extent=359.0,
+                )
+            # three quarter over, quarter down
+            c.create_arc(
+                x2 - dx // 4 - r, y1 + dy // 4 - r, 
+                x2 - dx // 4 + r, y1 + dy // 4 + r, 
+                fill="red",
+                outline="red",
+                start=0.0, 
+                extent=359.0,
+                )
+            # three quarter over, quarter up
+            c.create_arc(
+                x2 - dx // 4 - r, y2 - dy // 4 - r, 
+                x2 - dx // 4 + r, y2 - dy // 4 + r, 
+                fill="blue",
+                outline="blue",
+                start=0.0, 
+                extent=359.0,
+                )
+            # right edge, halfway down
+            c.create_arc(
+                x2 - r, y1 + dy // 2 - r, 
+                x2 + r, y1 + dy // 2 + r, 
+                fill="green",
+                outline="green",
                 start=0.0, 
                 extent=359.0,
                 )
