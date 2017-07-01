@@ -85,6 +85,7 @@ class IconType(enum.Enum):
     WORD = "word"
     CANVAS ="canvas"
 # icon = IconType.INITIAL
+# icon = IconType.WORD
 icon = IconType.CANVAS
 
 # icon drawn on tk Canvas:
@@ -259,67 +260,77 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
     def geticon(self, which):
         # which = initial code = one of N, O, R, F
         if icon is IconType.INITIAL:
-            return tk.Label(self.scoreframe, text=which, bg=bgcolor, fg=fgcolor, font=subscorefont)
+            return self.geticoninitial(which)
         elif icon is IconType.WORD:
-            if which == "N":
-                word = "neutral"
-            elif which == "O":
-                word = "opposing"
-            elif which == "R":
-                word = "robot"
-            elif which == "F":
-                word = "final"
-            else:
-                word = "unknown"
-            return tk.Label(self.scoreframe, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
+            return self.geticonword(which)
         elif icon is IconType.CANVAS:
-            c = tk.Canvas(self.scoreframe, 
-                width=canvassize, height=canvassize,
-                bg=bgcolor,
-                # this line removes a white border around the canvas
-                highlightthickness=0,
+            return self.geticoncanvas(which)
+        
+    def geticoninitial(self, which):
+        return tk.Label(self.scoreframe, text=which, bg=bgcolor, fg=fgcolor, font=subscorefont)
+
+    def geticonword(self, which):
+        if which == "N":
+            word = "neutral"
+        elif which == "O":
+            word = "opposing"
+        elif which == "R":
+            word = "robot"
+        elif which == "F":
+            word = "final"
+        else:
+            word = "unknown"
+        return tk.Label(self.scoreframe, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
+    def geticoncanvas(self, which):
+        c = tk.Canvas(self.scoreframe, 
+            width=canvassize, height=canvassize,
+            bg=bgcolor,
+            # this line removes a white border around the canvas
+            highlightthickness=0,
+            )
+        if which == "N":
+            # green circle
+            c.create_arc(*iconbounds, 
+                fill="green",
+                outline="green",
+                start=0.0, 
+                extent=359.0,
                 )
-            if which == "N":
-                # green circle
-                c.create_arc(*iconbounds, 
-                    fill="green",
-                    outline="green",
-                    start=0.0, 
-                    extent=359.0,
-                    )
-            elif which == "O":
-                # half red/half blue circle
-                c.create_arc(*iconbounds,
-                    fill="red",
-                    outline="red",
-                    start=-90.0, 
-                    extent=180.0,
-                    )
-                c.create_arc(*iconbounds, 
-                    fill="blue",
-                    outline="blue",
-                    start=90.0, 
-                    extent=180.0,
-                    )
-            elif which == "R":
-                # would like a robot silhouette in red/blue, but for now
-                #    just do a yellow circle as a placeholder
-                c.create_arc(*iconbounds, 
-                    fill="yellow",
-                    outline="yellow",
-                    start=0.0, 
-                    extent=359.0,
-                    )
-            elif which == "F":
-                # would like to do a little arena layout schematic, but
-                #   as a placeholder, purple circle:
-                c.create_arc(*iconbounds, 
-                    fill="purple",
-                    outline="purple",
-                    start=0.0, 
-                    extent=359.0,
-                    )
-            return c               
+        elif which == "O":
+            # half red/half blue circle
+            c.create_arc(*iconbounds,
+                fill="red",
+                outline="red",
+                start=-90.0, 
+                extent=180.0,
+                )
+            c.create_arc(*iconbounds, 
+                fill="blue",
+                outline="blue",
+                start=90.0, 
+                extent=180.0,
+                )
+        elif which == "R":
+            # would like a robot silhouette in red/blue, but for now
+            #    just do a yellow circle as a placeholder
+            c.create_arc(*iconbounds, 
+                fill="yellow",
+                outline="yellow",
+                start=0.0, 
+                extent=359.0,
+                )
+        elif which == "F":
+            # would like to do a little arena layout schematic, but
+            #   as a placeholder, purple circle:
+            c.create_arc(*iconbounds, 
+                fill="purple",
+                outline="purple",
+                start=0.0, 
+                extent=359.0,
+                )
+        return c               
+
+
 
     # ----- ScoreChangeListener stuff
     def messagechanged(self, message):
