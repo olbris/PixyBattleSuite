@@ -310,17 +310,12 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
                 extent=180.0,
                 )
         elif which == "R":
-            # would like a robot silhouette in red/blue
-            '''
-            #    just do a yellow circle as a placeholder
-            c.create_arc(*iconbounds, 
-                fill="yellow",
-                outline="yellow",
-                start=0.0, 
-                extent=359.0,
-                )
+            # considered a robot silhouette in red/blue, but that's hard
             '''
             # do a yellow star-like zap/explosion icon
+            # this is OK (four pointed explosion); would do a 5-6 point
+            #   explosion, with irregularities
+            # the red outline adds a lot!
             x1, y1, x2, y2 = iconbounds
             dx = x2 - x1
             dy = y2 - y1
@@ -337,6 +332,63 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
                 fill="yellow",
                 outline="red",
                 width=3,
+                )
+            '''
+            # red, laser icon-inspired icon
+            x1, y1, x2, y2 = iconbounds
+            dx = x2 - x1
+            dy = y2 - y1
+
+            # crossing lines
+            ox, oy = x2 - dx // 4, y1 + dy // 2,
+            targetlinewidth = 2
+            short = 3 * dx // 10
+            c.create_line(
+                ox + short, oy,
+                ox - short, oy,
+                fill="red",
+                capstyle=tk.ROUND,
+                width=targetlinewidth,
+                )
+            c.create_line(
+                ox, oy - short,
+                ox, oy + short,
+                fill="red",
+                capstyle=tk.ROUND,
+                width=targetlinewidth,
+                )
+            long_ = 7 * short // 10
+            c.create_line(
+                ox + long_, oy + long_,
+                ox - long_, oy - long_,
+                fill="red",
+                capstyle=tk.ROUND,
+                width=targetlinewidth,
+                )
+            c.create_line(
+                ox - long_, oy + long_,
+                ox + long_, oy - long_,
+                fill="red",
+                capstyle=tk.ROUND,
+                width=targetlinewidth,
+                )
+
+            # the laser line; has a black outline so the center
+            #   is emphasized
+            laserwidth = 2
+            c.create_line(
+                x1, oy,
+                ox, oy,
+                fill="black",
+                capstyle=tk.ROUND,
+                width=laserwidth + 2,
+                )
+            c.create_line(
+                x1, oy,
+                ox, oy,
+                fill="red",
+                capstyle=tk.ROUND,
+                width=laserwidth,
                 )
 
         elif which == "F":
