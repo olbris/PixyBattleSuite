@@ -39,6 +39,9 @@ class ScoreboardInputView(tk.Tk):
         tk.Button(self.messageframe, text="Set", command=self.setmessage).pack(side=tk.LEFT)
         tk.Button(self.messageframe, text="Clear/Set", command=self.setclearmessage).pack(side=tk.LEFT)
 
+        # score key
+        tk.Button(self, text="Toggle score key", command=self.togglescorekey).pack(side=tk.TOP)
+
         # visibility
         tk.Label(self, text="Window visibility:").pack(side=tk.TOP)
         self.visibilityframe = tk.Frame(self)
@@ -96,6 +99,9 @@ class ScoreboardInputView(tk.Tk):
 
     def togglesecondaryvisibility(self):
         self.scoreboardcontroller.toggleviewvisibility(ViewType.SECONDARY)
+
+    def togglescorekey(self):
+        self.scoreboardcontroller.togglescorekey()
 
     # ----- called by UI
     def onquit(self):

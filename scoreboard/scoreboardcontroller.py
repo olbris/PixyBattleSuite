@@ -147,6 +147,10 @@ class ScoreboardController:
         self.message = message
         self.messagechanged()
 
+    def togglescorekey(self):
+        for view in self.views.values():
+            view.togglescorekey()
+
     def toggleviewvisibility(self, viewtype):
         if self.viewvisibility[viewtype]:
             self.views[viewtype].withdraw()

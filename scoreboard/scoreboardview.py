@@ -43,6 +43,11 @@ REDCOL = 0
 ICONCOL = 1
 BLUECOL = 2
 
+# columns in score key:
+DESCRIPTIONCOL = 0
+ICONKEYCOL = 1
+SCORECOL = 2
+
 
 # lots of appearance values
 
@@ -107,6 +112,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.gamestate = const.GameState.UNKNOWN
 
         # set up UI
+        self.scorekeyvisible = False
 
         # make the primary window borderless
         if self.isprimaryview():
@@ -165,7 +171,6 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         #   when the team names are dissimilar lengths
         # for now, don't worry about it
         self.teamnameframe = tk.Frame(self.mainframe, bg=bgcolor)
-        # self.teamnameframe.pack(side=tk.TOP, expand=1, fill=tk.X)
         self.teamnameframe.pack(side=tk.TOP, pady=25)
 
 
@@ -194,7 +199,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redNscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redNscore.grid(row=NROW, column=REDCOL)
-        self.geticon("N").grid(row=NROW, column=ICONCOL, padx=20)
+        self.geticon(self.scoreframe, "N").grid(row=NROW, column=ICONCOL, padx=20)
         self.blueNscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueNscore.grid(row=NROW, column=BLUECOL)
@@ -203,7 +208,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redOscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redOscore.grid(row=OROW, column=REDCOL)
-        self.geticon("O").grid(row=OROW, column=ICONCOL, padx=20)
+        self.geticon(self.scoreframe, "O").grid(row=OROW, column=ICONCOL, padx=20)
         self.blueOscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueOscore.grid(row=OROW, column=BLUECOL)
@@ -212,7 +217,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redRscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redRscore.grid(row=RROW, column=REDCOL)
-        self.geticon("R").grid(row=RROW, column=ICONCOL, padx=20)
+        self.geticon(self.scoreframe, "R").grid(row=RROW, column=ICONCOL, padx=20)
         self.blueRscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueRscore.grid(row=RROW, column=BLUECOL)
@@ -221,7 +226,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redFscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.redFscore.grid(row=FROW, column=REDCOL)
-        self.geticon("F").grid(row=FROW, column=ICONCOL, padx=20)
+        self.geticon(self.scoreframe, "F").grid(row=FROW, column=ICONCOL, padx=20)
         self.blueFscore = tk.Label(self.scoreframe, text=0,
             bg=bgcolor, fg=fgcolor, font=subscorefont)
         self.blueFscore.grid(row=FROW, column=BLUECOL)
@@ -243,6 +248,43 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.messagelabel.pack(side=tk.TOP, pady=40)
 
 
+        # score key; initial not visible
+        self.scorekeyframe = tk.Frame(self.mainframe, bg=bgcolor)
+        # do not pack the frame yet!
+
+        tk.Label(self.scorekeyframe, text="neutral target",
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=NROW,
+            column=DESCRIPTIONCOL)
+        self.geticon(self.scorekeyframe, "N").grid(row=NROW, column=ICONCOL, padx=20)
+        tk.Label(self.scorekeyframe, text=const.ScoreValues.NEUTRAL.value,
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=NROW,
+            column=SCORECOL)
+
+        tk.Label(self.scorekeyframe, text="opposing target",
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=OROW,
+            column=DESCRIPTIONCOL)
+        self.geticon(self.scorekeyframe, "O").grid(row=OROW, column=ICONCOL, padx=20)
+        tk.Label(self.scorekeyframe, text=const.ScoreValues.OPPOSED.value,
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=OROW,
+            column=SCORECOL)
+
+        tk.Label(self.scorekeyframe, text="opposing robot",
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=RROW,
+            column=DESCRIPTIONCOL)
+        self.geticon(self.scorekeyframe, "R").grid(row=RROW, column=ICONCOL, padx=20)
+        tk.Label(self.scorekeyframe, text=const.ScoreValues.ROBOT.value,
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=RROW,
+            column=SCORECOL)
+
+        tk.Label(self.scorekeyframe, text="final target state",
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=FROW,
+            column=DESCRIPTIONCOL)
+        self.geticon(self.scorekeyframe, "F").grid(row=FROW, column=ICONCOL, padx=20)
+        tk.Label(self.scorekeyframe, text=const.ScoreValues.FINAL.value,
+            bg=bgcolor, fg=fgcolor, font=subscorefont).grid(row=FROW,
+            column=SCORECOL)
+
+
     def isprimaryview(self):
         return self.viewtype is ViewType.PRIMARY
 
@@ -254,19 +296,19 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.timerlabel.config(text="{}:{:0>2}".format(minutes,seconds))
 
     # "icon" creation calls
-    def geticon(self, which):
+    def geticon(self, frame, which):
         # which = initial code = one of N, O, R, F
         if icon is IconType.INITIAL:
-            return self.geticoninitial(which)
+            return self.geticoninitial(frame, which)
         elif icon is IconType.WORD:
-            return self.geticonword(which)
+            return self.geticonword(frame, which)
         elif icon is IconType.CANVAS:
-            return self.geticoncanvas(which)
+            return self.geticoncanvas(frame, which)
         
-    def geticoninitial(self, which):
-        return tk.Label(self.scoreframe, text=which, bg=bgcolor, fg=fgcolor, font=subscorefont)
+    def geticoninitial(self, frame, which):
+        return tk.Label(frame, text=which, bg=bgcolor, fg=fgcolor, font=subscorefont)
 
-    def geticonword(self, which):
+    def geticonword(self, frame, which):
         if which == "N":
             word = "neutral"
         elif which == "O":
@@ -277,11 +319,11 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             word = "final"
         else:
             word = "unknown"
-        return tk.Label(self.scoreframe, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
-    def geticoncanvas(self, which):
+        return tk.Label(frame, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
+    def geticoncanvas(self, frame, which):
         delta = 10
         iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
-        c = tk.Canvas(self.scoreframe, 
+        c = tk.Canvas(frame, 
             width=canvassize, height=canvassize,
             bg=bgcolor,
             # this line removes a white border around the canvas
@@ -462,7 +504,19 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
                 )
         return c               
 
-
+    def togglescorekey(self):
+        if self.scorekeyvisible:
+            # back to normal
+            self.scorekeyframe.pack_forget()
+            self.scoreframe.pack(side=tk.TOP)
+            self.messagelabel.pack(side=tk.TOP, pady=40)
+            self.scorekeyvisible = False
+        else:
+            # show the score key
+            self.scoreframe.pack_forget()
+            self.messagelabel.pack_forget()
+            self.scorekeyframe.pack(side=tk.TOP, pady=40)
+            self.scorekeyvisible = True
 
     # ----- ScoreChangeListener stuff
     def messagechanged(self, message):
