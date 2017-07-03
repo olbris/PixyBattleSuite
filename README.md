@@ -72,4 +72,4 @@ The scoreboard consists of three windows: a control window, and two views (prima
 
 You may display a message on the scoreboard using the "set message" feature.
 
-
+You may toggle a summary of the scoring scheme with the "toggle score key" button. 
