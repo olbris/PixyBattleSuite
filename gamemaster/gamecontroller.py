@@ -83,6 +83,12 @@ class GameController:
             # notify listeners
             self.statechanged()
 
+            # this forces score update at end; needed because
+            #   we don't total all subscores until the end
+            if (state is const.GameState.FINAL or
+                state is const.GameState.FINISHED):
+                self.scorechanged()
+
     def setmetadata(self, metadata):
         self.metadata = metadata
         self.metadatachanged()

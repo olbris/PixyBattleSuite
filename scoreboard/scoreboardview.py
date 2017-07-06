@@ -248,7 +248,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.messagelabel.pack(side=tk.TOP, pady=40)
 
 
-        # score key; initial not visible
+        # score key; initially not visible
         self.scorekeyframe = tk.Frame(self.mainframe, bg=bgcolor)
         # do not pack the frame yet!
 
@@ -320,6 +320,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         else:
             word = "unknown"
         return tk.Label(frame, text=word, bg=bgcolor, fg=fgcolor, font=subscorefont)
+
     def geticoncanvas(self, frame, which):
         delta = 10
         iconbounds = delta, delta, canvassize - delta -1, canvassize - delta - 1
