@@ -291,7 +291,9 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
     def updatetimer(self, value):
         minutes = int(value // 60)
         seconds = int(value % 60)
-        if minutes <= 0 and seconds < 0:
+        if minutes < 0:
+            minutes = 0
+        if seconds < 0:
             seconds = 0
         self.timerlabel.config(text="{}:{:0>2}".format(minutes,seconds))
 
