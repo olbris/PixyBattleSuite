@@ -14,7 +14,6 @@ import tkinter as tk
 
 # local
 from shared import constants as const
-from scoreboard.scoreboardview import ViewType
 
 
 # ------------------------- ScoreboardInputView -------------------------
@@ -57,25 +56,25 @@ class ScoreboardInputView(tk.Tk):
         self.movexframe = tk.Frame(self)
         self.movexframe.pack(side=tk.TOP)
         tk.Button(self.movexframe, text="-100", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(-100, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(-100, 0, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         tk.Button(self.movexframe, text="-10", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(-10, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(-10, 0, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         tk.Label(self.movexframe, text= " x ").pack(side=tk.LEFT)
         tk.Button(self.movexframe, text="+10", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(10, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(10, 0, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         tk.Button(self.movexframe, text="+100", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(100, 0, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(100, 0, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         self.moveyframe = tk.Frame(self)
         self.moveyframe.pack(side=tk.TOP)
         tk.Button(self.moveyframe, text="-100", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(0, -100, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, -100, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         tk.Button(self.moveyframe, text="-10", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(0, -10, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, -10, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         tk.Label(self.moveyframe, text= " y ").pack(side=tk.LEFT)
         tk.Button(self.moveyframe, text="+10", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(0, 10, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, 10, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
         tk.Button(self.moveyframe, text="+100", 
-            command=lambda: self.scoreboardcontroller.moveviewrelative(0, 100, ViewType.PRIMARY)).pack(side=tk.LEFT)
+            command=lambda: self.scoreboardcontroller.moveviewrelative(0, 100, const.ViewType.PRIMARY)).pack(side=tk.LEFT)
 
         # ----- buttons at the bottom
         self.buttonframe = tk.Frame(self)
@@ -95,10 +94,10 @@ class ScoreboardInputView(tk.Tk):
         self.scoreboardcontroller.setmessage("")
 
     def toggleprimaryvisibility(self):
-        self.scoreboardcontroller.toggleviewvisibility(ViewType.PRIMARY)
+        self.scoreboardcontroller.toggleviewvisibility(const.ViewType.PRIMARY)
 
     def togglesecondaryvisibility(self):
-        self.scoreboardcontroller.toggleviewvisibility(ViewType.SECONDARY)
+        self.scoreboardcontroller.toggleviewvisibility(const.ViewType.SECONDARY)
 
     def togglescorekey(self):
         self.scoreboardcontroller.togglescorekey()

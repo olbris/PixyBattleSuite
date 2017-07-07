@@ -111,6 +111,11 @@ class Commands(enum.Enum):
 apiurl = "http://127.0.0.1:5000"
 
 # ----- scoreboard
+class ViewType(enum.Enum):
+    PRIMARY = "primary"
+    SECONDARY = "secondary"
+
+
 # how often scoreboard should poll the score service, ms: 
 scoreservicepollinterval = 250
 

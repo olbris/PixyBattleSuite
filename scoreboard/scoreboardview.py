@@ -19,10 +19,6 @@ from shared import constants as const
 from scoreboard.scorechangelistener import ScoreChangeListener
 
 # ------------------------- constants -------------------------
-class ViewType(enum.Enum):
-    PRIMARY = "primary"
-    SECONDARY = "secondary"
-
 # rows in score grid
 # version with subscores above, total below:
 # NROW = 0
@@ -154,7 +150,6 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             bg=gamestatecolors[const.GameState.UNKNOWN])
         self.statebar1.pack(side=tk.TOP)
 
-        # placeholder
         self.timerlabel = tk.Label(self.mainframe,
             fg=fgcolor, bg=bgcolor, font=timerfont)
         self.timerlabel.pack(side=tk.TOP, pady=5)
@@ -286,7 +281,7 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
 
 
     def isprimaryview(self):
-        return self.viewtype is ViewType.PRIMARY
+        return self.viewtype is const.ViewType.PRIMARY
 
     def updatetimer(self, value):
         minutes = int(value // 60)
