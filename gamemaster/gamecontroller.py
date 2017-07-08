@@ -100,6 +100,7 @@ class GameController:
     def resetscores(self):
         self.resetstoredscores()
         self.resetalltargets()
+        self.scorechanged()
 
     def resetstoredscores(self):
         # holds hit data from targets, per device and team color
