@@ -73,3 +73,5 @@ The scoreboard consists of three windows: a control window, and two views (prima
 You may display a message on the scoreboard using the "set message" feature.
 
 You may toggle a summary of the scoring scheme with the "toggle score key" button. 
+
+There is an alternate primary scoreboard, the BigScoreboardView. It needs to be enabled/disabled by editing scoreboard.py. When it's active, it presents a much larger view, but it only shows the timer, team names, and total score. The top banner, bottom message, and subscores are not shown. As with the other primary view, it is borderless and positioned by the UI. When this view is active, the secondary view is not changed.
