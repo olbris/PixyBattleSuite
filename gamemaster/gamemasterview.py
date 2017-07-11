@@ -218,17 +218,17 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.robothitframe = tk.Frame(self.rightframe)
         self.robothitframe.pack(side=tk.TOP)
 
-        tk.Label(self.robothitframe, text="Enter robot hits:  RED: ").pack(side=tk.LEFT, padx=5)
-        self.redrobothitsvar = tk.IntVar()
-        self.redrobothitsvar.set(0)
+        tk.Label(self.robothitframe, text="Enter robot hits:  on RED: ").pack(side=tk.LEFT, padx=5)
+        self.onredrobothitsvar = tk.IntVar()
+        self.onredrobothitsvar.set(0)
         tk.Spinbox(self.robothitframe, from_=0, to=1000, width=5,
-            textvariable=self.redrobothitsvar).pack(side=tk.LEFT)
+            textvariable=self.onredrobothitsvar).pack(side=tk.LEFT)
 
-        tk.Label(self.robothitframe, text="BLUE: ").pack(side=tk.LEFT, padx=5)
-        self.bluerobothitsvar = tk.IntVar()
-        self.bluerobothitsvar.set(0)
+        tk.Label(self.robothitframe, text="on BLUE: ").pack(side=tk.LEFT, padx=5)
+        self.onbluerobothitsvar = tk.IntVar()
+        self.onbluerobothitsvar.set(0)
         tk.Spinbox(self.robothitframe, from_=0, to=1000, width=5,
-            textvariable=self.bluerobothitsvar).pack(side=tk.LEFT)
+            textvariable=self.onbluerobothitsvar).pack(side=tk.LEFT)
 
         tk.Button(self.robothitframe, text="Set", 
             command=self.onsetrobothits).pack(side=tk.LEFT, padx=5)
@@ -352,8 +352,8 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.gamecontroller.setmetadata(metadata)
 
     def onsetrobothits(self):
-        self.gamecontroller.setrobothits(self.redrobothitsvar.get(),
-            self.bluerobothitsvar.get())
+        self.gamecontroller.setrobothits(self.onredrobothitsvar.get(),
+            self.onbluerobothitsvar.get())
         self.gamecontroller.scorechanged()
 
     def resetscores(self):
@@ -361,8 +361,8 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
         self.gamecontroller.resetscores()
 
         # robots
-        self.redrobothitsvar.set(0)
-        self.bluerobothitsvar.set(0)
+        self.onredrobothitsvar.set(0)
+        self.onbluerobothitsvar.set(0)
 
         # trigger scoreboard update (I think this is right)
         self.onsetrobothits()

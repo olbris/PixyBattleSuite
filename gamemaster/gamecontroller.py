@@ -93,9 +93,11 @@ class GameController:
         self.metadata = metadata
         self.metadatachanged()
 
-    def setrobothits(self, redhits, bluehits):
-        self.robothits[const.TeamColors.RED] = redhits
-        self.robothits[const.TeamColors.BLUE] = bluehits
+    def setrobothits(self, onredhits, onbluehits):
+        # this is where we do the swap: hits ON red
+        #   are points for blue, and vice versa:
+        self.robothits[const.TeamColors.RED] = onbluehits
+        self.robothits[const.TeamColors.BLUE] = onredhits
 
     def resetscores(self):
         self.resetstoredscores()
