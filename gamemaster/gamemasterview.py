@@ -280,6 +280,9 @@ class GamemasterView(GameChangeListener, HardwareChangeListener, tk.Tk):
     def updatetimer(self, value):
         minutes = int(value // 60)
         seconds = int(value % 60)
+        if value < 0:
+            minutes = 0
+            seconds = 0
         if minutes < 0:
             minutes = 0
         if seconds < 0:
