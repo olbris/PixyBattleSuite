@@ -549,13 +549,13 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.redOscore.config(text=redO)
         self.redRscore.config(text=redR)
         self.redFscore.config(text=redF)
-        self.redTscore.config(text=redtotal)
+        self.redTscore.config(text=str(redtotal))
 
         self.blueNscore.config(text=blueN)
         self.blueOscore.config(text=blueO)
         self.blueRscore.config(text=blueR)
         self.blueFscore.config(text=blueF)
-        self.blueTscore.config(text=bluetotal)
+        self.blueTscore.config(text=str(bluetotal))
 
     def timervaluechanged(self, timervalue):
         self.updatetimer(timervalue)

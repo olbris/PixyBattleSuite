@@ -202,15 +202,21 @@ class BigScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.blueteamlabel.config(text=const.teamnames[data["blueteam"]])
 
     def gamestatechanged(self, data):
-        self.statebar1.config(bg=gamestatecolors[const.GameState(data["state"])])
-        self.statebar2.config(bg=gamestatecolors[const.GameState(data["state"])])
+        self.gamestate = const.GameState(data["state"])
+        self.statebar1.config(bg=gamestatecolors[self.gamestate])
+        self.statebar2.config(bg=gamestatecolors[self.gamestate])
+        # self.statebar1.config(bg=gamestatecolors[const.GameState(data["state"])])
+        # self.statebar2.config(bg=gamestatecolors[const.GameState(data["state"])])
 
     def gamescorechanged(self, data):
 
         redN, redO, redR, redF = data["redscore"]
         blueN, blueO, blueR, blueF = data["bluescore"]
 
+        # print("bigscoreview: red: ", redN, redO, redR, redF)
+        # print("bigscoreview: blue: ", blueN, blueO, blueR, blueF)
         # don't show final hits until final game states
+        # print("gamestate: ", self.gamestate.value)
         if (self.gamestate is const.GameState.FINAL or 
             self.gamestate is const.GameState.FINISHED):
             redtotal = redN + redO + redR + redF
@@ -222,8 +228,15 @@ class BigScoreboardView(ScoreChangeListener, tk.Toplevel):
             redtotal = redN + redO + redR
             bluetotal = blueN + blueO + blueR
 
-        self.redTscore.config(text=redtotal)
-        self.blueTscore.config(text=bluetotal)
+        '''
+        # does this work if we always add?
+        redtotal = redN + redO + redR + redF
+        bluetotal = blueN + blueO + blueR + blueF
+        '''
+        # print("totals: ", redtotal, bluetotal)
+
+        self.redTscore.config(text=str(redtotal))
+        self.blueTscore.config(text=str(bluetotal))
 
     def timervaluechanged(self, timervalue):
         self.updatetimer(timervalue)
