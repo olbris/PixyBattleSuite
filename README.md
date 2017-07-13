@@ -75,3 +75,13 @@ You may display a message on the scoreboard using the "set message" feature.
 You may toggle a summary of the scoring scheme with the "toggle score key" button. 
 
 There is an alternate primary scoreboard, the BigScoreboardView. It needs to be enabled/disabled by editing scoreboard.py. When it's active, it presents a much larger view, but it only shows the timer, team names, and total score. The top banner, bottom message, and subscores are not shown. As with the other primary view, it is borderless and positioned by the UI. When this view is active, the secondary view is not changed.
+
+## Status
+
+The 2017 event has been run. The software worked very well.
+
+**Issues/feature**
+
+* Score reset bug; when score is reset, it's still being cached somewhere in the gamecontroller, because it returns and is pushed back through to the scoreboard. The score resets correctly at the start of the game, so it's purely cosmetic.
+* Moving the primary window: needs +/- 1000 in x (screens are wide); even better, have it remember the last used position and, on button press, restore it. 
+* If team names are asymmetric, the team name display area will become uncentered.
