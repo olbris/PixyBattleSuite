@@ -208,13 +208,16 @@ class BigScoreboardView(ScoreChangeListener, tk.Toplevel):
         self.gamestate = const.GameState(data["state"])
         self.statebar1.config(bg=gamestatecolors[self.gamestate])
         self.statebar2.config(bg=gamestatecolors[self.gamestate])
-        # self.statebar1.config(bg=gamestatecolors[const.GameState(data["state"])])
-        # self.statebar2.config(bg=gamestatecolors[const.GameState(data["state"])])
 
     def gamescorechanged(self, data):
 
         redN, redO, redR, redF = data["redscore"]
         blueN, blueO, blueR, blueF = data["bluescore"]
+
+        if (self.gamestate is const.GameState.PREPARING or
+            self.gamestate is const.GameState.READY):
+            redN, redO, redR, redF = 0, 0, 0, 0
+            blueN, blueO, blueR, blueF = 0, 0, 0, 0
 
         # print("bigscoreview: red: ", redN, redO, redR, redF)
         # print("bigscoreview: blue: ", blueN, blueO, blueR, blueF)

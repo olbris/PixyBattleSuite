@@ -536,6 +536,11 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
         redN, redO, redR, redF = data["redscore"]
         blueN, blueO, blueR, blueF = data["bluescore"]
 
+        if (self.gamestate is const.GameState.PREPARING or
+            self.gamestate is const.GameState.READY):
+            redN, redO, redR, redF = 0, 0, 0, 0
+            blueN, blueO, blueR, blueF = 0, 0, 0, 0
+
         # don't show final hits until final game states
         if (self.gamestate is const.GameState.FINAL or 
             self.gamestate is const.GameState.FINISHED):
@@ -548,16 +553,16 @@ class ScoreboardView(ScoreChangeListener, tk.Toplevel):
             redtotal = redN + redO + redR
             bluetotal = blueN + blueO + blueR
 
-        self.redNscore.config(text=redN)
-        self.redOscore.config(text=redO)
-        self.redRscore.config(text=redR)
-        self.redFscore.config(text=redF)
+        self.redNscore.config(text=str(redN))
+        self.redOscore.config(text=str(redO))
+        self.redRscore.config(text=str(redR))
+        self.redFscore.config(text=str(redF))
         self.redTscore.config(text=str(redtotal))
 
-        self.blueNscore.config(text=blueN)
-        self.blueOscore.config(text=blueO)
-        self.blueRscore.config(text=blueR)
-        self.blueFscore.config(text=blueF)
+        self.blueNscore.config(text=str(blueN))
+        self.blueOscore.config(text=str(blueO))
+        self.blueRscore.config(text=str(blueR))
+        self.blueFscore.config(text=str(blueF))
         self.blueTscore.config(text=str(bluetotal))
 
     def timervaluechanged(self, timervalue):
