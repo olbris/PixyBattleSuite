@@ -39,8 +39,8 @@ The gamemaster UI is meant to guide you through running the game.
 
 **Gamemaster, left side: hardware and testing**
 * Everything on the left side is for testing. In normal operation, you don't need it.
-** Click "discover" to find all connected targets.  Select the targets you want to send a command to, then click the button.
-** Game state changes: *really* shouldn't be messed with. Some game state changes trigger other behaviors, and if you do them out of order, unpredictable things could happen.
+* Click "discover" to find all connected targets.  Select the targets you want to send a command to, then click the button.
+* Game state changes: *really* shouldn't be messed with. Some game state changes trigger other behaviors, and if you do them out of order, unpredictable things could happen.
 
 **Gamemaster, right side: game controls**
 
